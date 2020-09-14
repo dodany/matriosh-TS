@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "matriosht-TS"
+    }
+  },
+  "defaultProject": "matriosht-TS",
+  "cli": {
+    "analytics": "c380a0bf-ae39-4b3e-b792-cfa3749d1455"
+  }
 }
