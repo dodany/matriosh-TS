@@ -1,0 +1,90 @@
+<div class="toolbar">
+  <h1>MatrioshTS!</h1>
+</div>
+
+ <!-- <div class="content">-->
+
+<div class="card-container">
+  <div class="card card-size" tabindex="0">
+
+    <div class="card card-size ">
+      <h3 class="h3-style"> Entrada:</h3>
+      <ngx-codemirror [(ngModel)]="jsonInput" [options]="{
+            lineNumbers: true,
+            theme: 'darcula',
+            mode: 'application/ld+json',
+            lineWrapping: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            lint: true
+        }" #txtJsonInput> </ngx-codemirror>
+    </div>
+    <div class="example-button-row">
+
+      <button mat-raised-button (click)="onEjecutar()">LImpiar</button>
+
+      <button mat-raised-button (click)="onEjecutar()">Traducir</button>
+
+      <button mat-raised-button (click)="onEjecutar()">Ejecutar</button>
+
+
+    </div>
+
+  </div>
+
+  <div class="card card-size" tabindex="0">
+    <div class="card card-size ">
+      <h3 class="h3-style"> Salida:</h3>
+      <ngx-codemirror [(ngModel)]="jsonInput" [options]="{
+            lineNumbers: true,
+            theme: 'darcula',
+            mode: 'application/ld+json',
+            lineWrapping: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            lint: true
+        }" #txtJsonInput> </ngx-codemirror>
+    </div>
+
+    <div class="example-button-row">
+
+      <button mat-raised-button (click)="onEjecutar()">Limpiar</button>
+
+    </div>
+
+    <div class="example-button-row">
+
+      <mat-checkbox class="example-margin">Árbol</mat-checkbox>
+      <mat-checkbox class="example-margin">Consola</mat-checkbox>
+      <mat-checkbox class="example-margin">Errores</mat-checkbox>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="card-container">
+  <div class="card card-size" tabindex="0">
+    <h2>Consola</h2>
+<!-- Terminal -->
+<div class="terminal">
+  <pre> ng generate component xyz</pre>
+</div>
+  </div>
+  <div class="card card-size" tabindex="0">
+    <h2>Árbol</h2>
+  </div>
+</div>
+
+
+
+<!-- </div>-->
+
+<div>
+  <span class="version-info"> Dodany Girón - 200511896 </span>
+</div>
