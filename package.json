@@ -12,13 +12,20 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.1.9",
+    "@angular/cdk": "^10.2.0",
     "@angular/common": "~9.1.9",
     "@angular/compiler": "~9.1.9",
     "@angular/core": "~9.1.9",
     "@angular/forms": "~9.1.9",
+    "@angular/material": "^10.2.0",
     "@angular/platform-browser": "~9.1.9",
     "@angular/platform-browser-dynamic": "~9.1.9",
     "@angular/router": "~9.1.9",
+    "@ctrl/ngx-codemirror": "^4.0.1",
+    "@ng-bootstrap/ng-bootstrap": "^7.0.0",
+    "bootstrap": "^4.5.2",
+    "codemirror": "^5.57.0",
+    "core-js": "2.5.5",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
@@ -42,5 +49,11 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "child_process": false
   }
 }

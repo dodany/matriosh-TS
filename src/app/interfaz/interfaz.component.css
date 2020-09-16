@@ -1,0 +1,150 @@
+h1,h2,h3,h4,h5,h6 {
+  margin: 8px 0;
+}
+
+.h3-style{
+  margin: 5px 0;
+}
+
+p {
+  margin: 0;
+}
+
+/********** CONSOLA-TERMINAL*/
+.terminal {
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 6px;
+  padding-top: 45px;
+  margin-top: 8px;
+  overflow: hidden;
+  background-color: rgb(15, 15, 16);
+}
+
+.terminal pre {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  color: white;
+  padding: 0 1rem 1rem;
+  margin: 0;
+  font-size: 10px;
+}
+
+/*********** FOOTER */
+.version-info {
+  font-size: 12pt;
+  float: right;
+  margin: 8px;
+  padding-right: 60px;
+  padding-top: 10px;
+  /*
+  border:2px solid green;
+  */
+
+}
+
+/************ TOOLBAR */
+.toolbar {
+  height: 50px;
+  text-align: center;
+  color: black;
+  padding-top: 10px;
+  /*
+  background-color: #558fc9;
+*/
+}
+
+/*CONTENT*/
+.content {
+  display: inline-flex;
+  flex-direction: column;
+  /*margin: 0px auto 10px 2px;
+  padding: 0 10px;*/
+
+  margin-right: auto;
+  margin-left: auto;
+
+  padding-left: 15px;
+  padding-right: 15px;
+
+  /*
+  border: 2px solid rgb(155, 39, 97);
+  */
+
+}
+
+
+/* Responsive Styles */
+.card {
+  border-radius: 4px;
+  border: 1px solid #eee;
+  background-color: #fafafa;
+  height: 40px;
+  width: 200px;
+  margin: 0 8px 16px;
+  /*padding: 16px;*/
+  display: flex;
+  flex-direction: row;
+  /*justify-content: center;
+  align-items: center;*/
+  transition: all 0.2s ease-in-out;
+  /* line-height: 24px;*/
+}
+
+.card.card-size {
+
+  height: auto; /*************/
+  width: 720px;
+  display:inline;
+}
+
+.card-container .card:not(:last-child) {
+  margin-right: 0;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  /*
+  border: 1px solid rgb(79, 11, 236);
+*/
+}
+
+/*NGX container */
+.CodeMirror {
+  border: 1px solid rgb(236, 11, 11);
+  /*height: auto;*/
+}
+
+.cm-container {
+  display: inline;
+  flex-wrap: nowrap;
+  /*
+   border: 1px solid rgb(33, 4, 49);
+  background-color: rgb(140, 153, 119);
+*/
+}
+
+/* button  */
+.example-button-row {
+  text-align: right;
+  width: 720px;
+  /*
+  border: 1px solid rgb(33, 4, 49);
+  background-color: rgb(144, 219, 30);
+*/
+}
+
+.example-button-row .mat-button-base {
+  margin: 0px 8px 8px 0;
+}
+
+/* CHECKBOX*/
+.example-section {
+  margin: 12px 0;
+}
+
+.example-margin {
+  margin: 0 12px;
+}
