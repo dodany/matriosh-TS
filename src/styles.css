@@ -3,3 +3,21 @@
 @import '~codemirror/addon/fold/foldgutter.css';
 @import '~codemirror/addon/lint/lint.css';
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+
+.node circle {
+  fill: orange;
+  stroke: green;
+  stroke-width: 3px;
+}
+
+.node text {
+  font: 8px sans-serif;
+  font:bold;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}

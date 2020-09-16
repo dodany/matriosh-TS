@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 
+declare const arith_arbol: any;
+declare const generateTree: any;
+
 @Component({
   selector: 'app-interfaz',
   templateUrl: './interfaz.component.html',
@@ -12,24 +15,36 @@ export class InterfazComponent implements OnInit {
   @Input() chartData: any;
 
 
-
- obj;
-
   //prueba
   jqlOutput: string;
+  jsonOutput;
+  jqlQuery: string;
+
 
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
   onEjecutar(){
-    alert ("hola");
+
+    let content = this.jsonInput;
+    let result = arith_arbol.parse(content);
+
+    this.jsonOutput = result.val.toString();
+
+    if (<HTMLInputElement>document.getElementById("grafo")) {
+      (<HTMLInputElement> document.getElementById("grafo")).remove();
+  }
+    generateTree([result.node]);
+
+
   }
 
   setEditorContent(event) {
     // console.log(event, typeof event);
-    console.log(this.obj);
+
   }
 
 
