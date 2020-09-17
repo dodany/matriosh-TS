@@ -12,12 +12,13 @@
 }
 
 .node text {
-  font: 8px sans-serif;
+  font: 10px sans-serif;
   font:bold;
 }
 
 .link {
   fill: none;
-  stroke: #ccc;
-  stroke-width: 2px;
+  /*stroke: #ccc;*/
+  stroke: black;
+  stroke-width: 1px;
 }

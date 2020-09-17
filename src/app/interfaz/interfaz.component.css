@@ -6,6 +6,11 @@ h1,h2,h3,h4,h5,h6 {
   margin: 5px 0;
 }
 
+.h3-tree{
+  margin-left: 15px;
+}
+
+
 p {
   margin: 0;
 }
@@ -40,7 +45,6 @@ p {
   /*
   border:2px solid green;
   */
-
 }
 
 /************ TOOLBAR */
@@ -60,19 +64,14 @@ p {
   flex-direction: column;
   /*margin: 0px auto 10px 2px;
   padding: 0 10px;*/
-
   margin-right: auto;
   margin-left: auto;
-
   padding-left: 15px;
   padding-right: 15px;
-
   /*
   border: 2px solid rgb(155, 39, 97);
   */
-
 }
-
 
 /* Responsive Styles */
 .card {
@@ -104,7 +103,7 @@ p {
 
 .card-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   margin-top: 3px;
   /*
   border: 1px solid rgb(79, 11, 236);

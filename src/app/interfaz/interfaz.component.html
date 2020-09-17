@@ -2,14 +2,18 @@
   <h1>MatrioshTS!</h1>
 </div>
 
- <!-- <div class="content">-->
+<!-- <div class="content">-->
+
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
 
 <div class="card-container">
   <div class="card card-size" tabindex="0">
 
     <div class="card card-size ">
       <h3 class="h3-style"> Entrada:</h3>
-      <ngx-codemirror [(ngModel)]="jsonInput"   [options]="{
+      <ngx-codemirror [(ngModel)]="txtIn" [options]="{
             lineNumbers: true,
             theme: 'darcula',
             mode: 'application/ld+json',
@@ -22,14 +26,9 @@
         }" #txtEntrada> </ngx-codemirror>
     </div>
     <div class="example-button-row">
-
-      <button mat-raised-button (click)="onEjecutar()">LImpiar</button>
-
-      <button mat-raised-button (click)="onEjecutar()">Traducir</button>
-
+      <button mat-raised-button (click)="onCleanIn()">LImpiar</button>
+      <button mat-raised-button (click)="onTraducir()">Traducir</button>
       <button mat-raised-button (click)="onEjecutar()">Ejecutar</button>
-
-
     </div>
 
   </div>
@@ -37,7 +36,7 @@
   <div class="card card-size" tabindex="0">
     <div class="card card-size ">
       <h3 class="h3-style"> Salida:</h3>
-      <ngx-codemirror [(ngModel)]="jsonOutput" [options]="{
+      <ngx-codemirror [(ngModel)]="txtOut" [options]="{
             lineNumbers: true,
             theme: 'darcula',
             mode: 'application/ld+json',
@@ -52,29 +51,32 @@
 
     <div class="example-button-row">
 
-      <button mat-raised-button (click)="onEjecutar()">Limpiar</button>
+      <button mat-raised-button (click)="onCleanOut()">Limpiar</button>
 
     </div>
 
     <div class="example-button-row">
 
-      <mat-checkbox class="example-margin">Árbol</mat-checkbox>
-      <mat-checkbox class="example-margin">Consola</mat-checkbox>
-      <mat-checkbox class="example-margin">Errores</mat-checkbox>
+      <mat-checkbox class="example-margin" [(ngModel)]="chkTree">Árbol</mat-checkbox>
+      <mat-checkbox class="example-margin" [(ngModel)]="chkConsola">Consola</mat-checkbox>
+      <mat-checkbox class="example-margin" [(ngModel)]="chkError">Errores</mat-checkbox>
 
     </div>
 
   </div>
 
 </div>
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
 
 <div class="card-container">
   <div class="card card-size" tabindex="0">
     <h2>Consola</h2>
-<!-- Terminal -->
-<div class="terminal">
-  <pre> ng generate component xyz</pre>
-</div>
+    <!-- Terminal -->
+    <div class="terminal">
+      <pre> ng generate component xyz</pre>
+    </div>
   </div>
   <div class="card card-size" tabindex="0">
     <h2>Árbol</h2>
@@ -87,4 +89,11 @@
 
 <div>
   <span class="version-info"> Dodany Girón - 200511896 </span>
+</div>
+
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+<div class="h3-tree" id="tree"  hidden>
+  <h2>Árbol</h2>
 </div>

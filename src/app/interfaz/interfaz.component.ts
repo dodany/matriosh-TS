@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Input } from '@angular/core';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
@@ -7,106 +6,65 @@ declare const generateTree: any;
 @Component({
   selector: 'app-interfaz',
   templateUrl: './interfaz.component.html',
-  styleUrls: ['./interfaz.component.css']
+  styleUrls: ['./interfaz.component.css'],
 })
 
 export class InterfazComponent implements OnInit {
+  txtIn: string;
+  txtOut: string;
+  chkTree: boolean;
+  chkConsola: boolean;
+  chkError: boolean;
 
-  @Input() chartData: any;
-
-
-  //prueba
-  jqlOutput: string;
-  jsonOutput;
-  jqlQuery: string;
-
-
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    this.chkTree = true;
+    this.chkConsola = true;
+    this.chkError = true;
 
   }
 
-  onEjecutar(){
+  ngOnInit(): void {}
 
-    let content = this.jsonInput;
-    let result = arith_arbol.parse(content);
+  /**
+   *
+   * EJECUTAR
+   */
+  onEjecutar() {
+    let result = arith_arbol.parse(this.txtIn);
+    this.txtOut = result.val.toString();
 
-    this.jsonOutput = result.val.toString();
-
-    if (<HTMLInputElement>document.getElementById("grafo")) {
-      (<HTMLInputElement> document.getElementById("grafo")).remove();
-  }
-    generateTree([result.node]);
-
-
-  }
-
-  setEditorContent(event) {
-    // console.log(event, typeof event);
-
-  }
-
-
-// koala
-
-
-jsonInput: string = "";
-
-isFailured: boolean;
-autoResize = true;
-errorMessage: string;
-msgBtnGraph = 'Expandir';
-msgBtnEditor = 'Expandir';
-showGraph = true;
-showEditor = true;
-line = 'line';
-bar = 'bar';
-
-
-
-public graphJson() {
-  try {
-    /* this.chartrRequest = {
-      urlRequest: null,
-      jsonRequest: JSON.parse(this.jsonInput),
-      type: 'grafica'
-    }; */
-   // this.dataSource.next(this.chartrRequest);
-    this.isFailured = false;
-  } catch (error) {
-    this.errorMessage = error;
-    this.isFailured = true;
-  }
-}
-
-public expandGraph() {
-  if (!this.showEditor) {
-    this.showGraph = false;
-  }
-  this.showEditor = !this.showEditor;
-  setTimeout(() => {
-    this.msgBtnGraph  = this.msgShowBtn(this.showEditor);
-    if (this.showEditor) {
-      this.showGraph = true;
+    if (this.chkTree) {
+      if (<HTMLInputElement>document.getElementById('grafo')) {
+        (<HTMLInputElement>document.getElementById('grafo')).remove();
+        //(<HTMLInputElement>document.getElementById('tree')).hidden=true;
+      }
+      generateTree([result.node]);
+    } else {
+      (<HTMLInputElement>document.getElementById('grafo')).remove();
+     // (<HTMLInputElement>document.getElementById('tree')).hidden=true;
     }
-  }, 250);
-}
+  }
 
-public expandEditor() {
-  this.showGraph = !this.showGraph;
-  setTimeout(() => {
-    this.msgBtnEditor  = this.msgShowBtn(this.showGraph);
-  }, 250);
-}
+  /**
+   *
+   * TRADUCIR
+   */
+  onTraducir() {}
 
-public msgShowBtn(isShowed: boolean) {
-  if (isShowed) { return 'Expandir'; }
-  return 'Cerrar';
-}
+  /**
+   *
+   * LIMPIAR CONSOLA ENTRADA
+   */
+  onCleanIn() {
+    this.txtIn = '';
+  }
 
-public downloadJsonTemplate() {
-  //this.sharedData.downloadJsonTemplate(this.jsonInput);
-}
-}
+  /**
+   *
+   * LIMPIAR CONSOLA SALIDA
+   */
+  onCleanOut() {
+    this.txtOut = '';
+  }
 
+}
