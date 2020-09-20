@@ -15,6 +15,7 @@ export class InterfazComponent implements OnInit {
   chkTree: boolean;
   chkConsola: boolean;
   chkError: boolean;
+  txtoi: String;
 
   constructor() {
     this.chkTree = true;
@@ -23,6 +24,8 @@ export class InterfazComponent implements OnInit {
 
   }
 
+
+
   ngOnInit(): void {}
 
   /**
@@ -30,7 +33,7 @@ export class InterfazComponent implements OnInit {
    * EJECUTAR
    */
   onEjecutar() {
-    let result = arith_arbol.parse(this.txtIn);
+    const result = arith_arbol.parse(this.txtIn);
     this.txtOut = result.val.toString();
 
     if (this.chkTree) {
@@ -44,6 +47,8 @@ export class InterfazComponent implements OnInit {
      // (<HTMLInputElement>document.getElementById('tree')).hidden=true;
     }
   }
+
+
 
   /**
    *
