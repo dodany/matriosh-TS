@@ -13,10 +13,11 @@
 
     <div class="card card-size ">
       <h3 class="h3-style"> Entrada:</h3>
-      <ngx-codemirror [(ngModel)]="txtIn" [options]="{
+      <ngx-codemirror [(ngModel)]="txtIn"
+       [options]="{
             lineNumbers: true,
-            theme: 'darcula',
-            mode: 'application/ld+json',
+            theme: 'lesser-dark',
+            mode: 'javascript',
             lineWrapping: true,
             foldGutter: true,
             gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
@@ -36,10 +37,11 @@
   <div class="card card-size" tabindex="0">
     <div class="card card-size ">
       <h3 class="h3-style"> Salida:</h3>
-      <ngx-codemirror [(ngModel)]="txtOut" [options]="{
+      <ngx-codemirror [(ngModel)]="txtOut"
+        [options]="{
             lineNumbers: true,
-            theme: 'darcula',
-            mode: 'application/ld+json',
+            theme: 'lesser-dark',
+            mode: 'javascript',
             lineWrapping: true,
             foldGutter: true,
             gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
@@ -94,6 +96,5 @@
 <mat-divider></mat-divider>
 <mat-divider></mat-divider>
 <mat-divider></mat-divider>
-<div class="h3-tree" id="tree"  hidden>
-  <h2>Árbol</h2>
-</div>
+
+
