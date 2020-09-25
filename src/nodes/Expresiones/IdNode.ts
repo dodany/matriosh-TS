@@ -2,7 +2,7 @@ import { Node } from '../Node';
 import { Table } from 'src/st/Table';
 import { Tree } from 'src/st/Tree';
 import { Symbol } from '../../st/Symbol';
-import { Exception } from '../../st/Exception';
+import { ExceptionST } from '../../st/ExceptionST';
 
 export class IdNode extends Node {
   id: String;
@@ -18,7 +18,7 @@ export class IdNode extends Node {
 
     var_ = table.getVariable(this.id);
     if (var_ == null) {
-      const error = new Exception(
+      const error = new ExceptionST(
         'Semantico',
         'No se ha encontrado la variable ' + this.id,
         this.line,

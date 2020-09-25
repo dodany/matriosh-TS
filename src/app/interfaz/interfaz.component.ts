@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { Table } from '../../st/Table';
+import { ExceptionST } from '../../st/ExceptionST';
+import { TypeError } from '../../st/TypeError';
+import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
+import { BreakNode} from '../../nodes/Expresiones/BreakNode';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
+declare const grammar: any;
 
 @Component({
   selector: 'app-interfaz',
@@ -46,6 +52,31 @@ export class InterfazComponent implements OnInit {
       (<HTMLInputElement>document.getElementById('grafo')).remove();
      // (<HTMLInputElement>document.getElementById('tree')).hidden=true;
     }
+  }
+
+  OnEjecutarTs () {
+
+    const tree = grammar.parse(this.txtIn);
+    const tabla = new Table (null);
+    this.txtOut = tree.val.toString();
+
+    tree.instructions.map((m: any) => {
+      const res = m.execute(tabla, tree);
+
+      if (res instanceof BreakNode) {
+        const error = new ExceptionST(TypeError.SEMANTICO,
+          `Sentencia break fuera de un ciclo`,
+          res.line, res.column);
+        tree.excepciones.push(error);
+        tree.console.push(error.toString());
+      } else if (res instanceof ContinueNode) {
+        const error = new ExceptionST(TypeError.SEMANTICO,
+          `Sentencia continue fuera de un ciclo`,
+          res.line, res.column);
+        tree.excepciones.push(error);
+        tree.console.push(error.toString());
+      }
+    });
   }
 
 

@@ -2,7 +2,8 @@ import { Node } from '../Node';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { types, Type } from '../../st/Type';
-import { Exception } from '../../st/Exception';
+import { ExceptionST } from '../../st/ExceptionST';
+import { TypeError } from '../../st/TypeError';
 
 export class RelationalNode extends Node {
   arg1: Node;
@@ -23,12 +24,13 @@ export class RelationalNode extends Node {
   }
 
   execute(table: Table, tree: Tree) {
+    this.type = new Type(types.BOOLEAN);
     const lResult = this.arg1.execute(table, tree);
-    if (lResult instanceof Exception) {
+    if (lResult instanceof ExceptionST) {
       return lResult;
     }
     const rResult = this.arg2.execute(table, tree);
-    if (rResult instanceof Exception) {
+    if (rResult instanceof ExceptionST) {
       return rResult;
     }
 
@@ -50,9 +52,9 @@ export class RelationalNode extends Node {
         case '!=':
           return lResult != rResult;
         default:
-          const error = new Exception(
-            'Semantico',
-            `Error, Operador desconocido`,
+          const error = new ExceptionST(
+            TypeError.SEMANTICO,
+            'Operador desconocido',
             this.line,
             this.column
           );
@@ -61,9 +63,9 @@ export class RelationalNode extends Node {
           return error;
       }
     } else {
-      const error = new Exception(
-        'Semantico',
-        `Error de tipos en MENOR QUE se esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
+      const error = new ExceptionST(
+        TypeError.SEMANTICO,
+        `Problema con los tipos que esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
         this.line,
         this.column
       );
