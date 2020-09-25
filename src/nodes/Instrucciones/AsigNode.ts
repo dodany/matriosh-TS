@@ -1,7 +1,7 @@
 import { Node } from '../Node';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
-import { Exception } from '../../st/Exception';
+import { ExceptionST } from '../../st/ExceptionST';
 import { Symbol } from '../../st/Symbol';
 
 export class AsigNode extends Node {
@@ -16,7 +16,7 @@ export class AsigNode extends Node {
 
   execute(table: Table, tree: Tree) {
     const result = this.value.execute(table, tree);
-    if (result instanceof Exception) {
+    if (result instanceof ExceptionST) {
       return result;
     }
 
@@ -24,7 +24,7 @@ export class AsigNode extends Node {
     var_: table.getVariable(this.id);
 
     if (var_ == null) {
-      const error = new Exception(
+      const error = new ExceptionST(
         'Semantico',
         'No se ha encontrado la variable ' + this.id,
         this.line,
@@ -36,7 +36,7 @@ export class AsigNode extends Node {
     }
 
     if (this.value.type.type != var_.type.type) {
-      const error = new Exception(
+      const error = new ExceptionST(
         'Semantico',
         `No se puede asignar la variable porque los tipos no coinciden.`,
         this.line,

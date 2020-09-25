@@ -17,7 +17,13 @@
     ]
   },
   "angularCompilerOptions": {
+    "module": "commonjs",
+    "allowJs": true,
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports":true,
+    "noImplicitAny": true,
+    "esModuleInterop": true
   }
 }

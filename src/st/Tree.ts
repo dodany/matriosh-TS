@@ -1,11 +1,11 @@
 import {Node} from "../nodes/Node";
-import {Exception} from "./Exception";
+import {ExceptionST} from "./ExceptionST";
 /**
  * @class Almacena el ast y ademas la lista de excepciones
  */
 export class Tree {
     instructions: Array<Node>
-    excepciones: Array<Exception>
+    excepciones: Array<ExceptionST>
     console: Array<String>
 
     /**
@@ -14,7 +14,7 @@ export class Tree {
      */
     constructor(instructions: Array<Node>) {
         this.instructions = instructions;
-        this.excepciones = new Array<Exception>();
+        this.excepciones = new Array<ExceptionST>();
         this.console = new Array<String>();
     }
 }

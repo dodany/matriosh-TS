@@ -2,7 +2,7 @@
 /**
  * @Class Clase para almacenar errores, léxicos, sintácticos o semánticos
  */
-export class Exception {
+export class ExceptionST {
     type: String;
     description: String;
     line: Number;

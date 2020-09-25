@@ -1,7 +1,7 @@
 import { Node } from '../Node';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
-import { Exception } from '../../st/Exception';
+import { ExceptionST } from '../../st/ExceptionST';
 import { Symbol } from '../../st/Symbol';
 import { types } from 'src/st/Type';
 import { ContinueNode } from '../Expresiones/ContinueNode';
@@ -29,12 +29,12 @@ export class IfNode extends Node {
     const newTable = new Table(table);
     let result: Node;
     result = this.condition.execute(newTable, tree);
-    if (result instanceof Exception) {
+    if (result instanceof ExceptionST) {
       return result;
     }
 
     if (this.condition.type.type !== types.BOOLEAN) {
-      const error = new Exception(
+      const error = new ExceptionST(
         'Semantico',
         `Se esperaba una expresion booleana para la condicion`,
         this.line,

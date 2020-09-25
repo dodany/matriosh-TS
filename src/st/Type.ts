@@ -22,7 +22,7 @@ export class Type{
     if(this.type === types.BOOLEAN){
         return 'boolean';
     }else if(this.type === types.NUMBER){
-        return 'numeric';
+        return 'number';
     }else if(this.type === types.STRING){
         return 'string';
     }

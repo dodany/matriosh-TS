@@ -1,8 +1,9 @@
 import { Node } from '../Node';
-import { Exception } from '../../st/Exception';
+import { ExceptionST } from '../../st/ExceptionST';
 import { types, Type } from '../../st/Type';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
+import { TypeError } from '../../st/TypeError';
 
 export class ArithNode extends Node {
   arg1: Node;
@@ -22,109 +23,145 @@ export class ArithNode extends Node {
     this.op = op;
   }
 
-  execute( table: Table, tree: Tree ) {
-    const lResult = this.arg1.execute( table, tree );
-    if (lResult instanceof Exception) {
+  execute(table: Table, tree: Tree) {
+    const lResult = this.arg1.execute(table, tree);
+    if (lResult instanceof ExceptionST) {
       return lResult;
     }
-    const rResult = this.arg2.execute( table , tree );
-    if (rResult instanceof Exception) {
-      return rResult;
-    }
 
-    switch (this.op) {
-      case '+':
-        if (
-          this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.NUMBER
-        ) {
-          this.type = new Type(types.NUMBER);
-          return lResult + rResult;
-        } else if (
-          this.arg1.type.type === types.STRING && this.arg2.type.type === types.STRING
-        ) {
-          this.type = new Type(types.STRING);
-          return lResult + rResult;
-        } else if (
-          this.arg1.type.type === types.ARRAY && this.arg2.type.type === types.ARRAY
-        ) {
-          // ARRAYS
-
-
-        } else {
-          const error = new Exception(
-            'Semantico',
-            `Error en los tipo - Type mismatch'  ${this.arg1.type.type} y ${this.arg2.type.type}`,
-            this.line,
-            this.column
-          );
-          return error;
-        }
-
-      case '-':
-        if (this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.NUMBER) {
-          this.type = new Type(types.NUMBER);
-          return lResult  - rResult;
-      } else {
-          console.log(this.arg1);
-          const error = new Exception('Semantico',
-              `Error de tipos en la resta se esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
-              this.line, this.column);
-          tree.excepciones.push(error);
-          tree.console.push(error.toString());
-          return error;
+    if (this.arg2 !== null) {
+      //VIENEN AMBOS NODOS
+      const rResult = this.arg2.execute(table, tree);
+      if (rResult instanceof ExceptionST) {
+        return rResult;
       }
-      case '*':
-        if (this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.NUMBER) {
-          this.type = new Type(types.NUMBER);
-          return lResult * rResult;
-      } else {
-          const error = new Exception('Semantico',
-              `Error de tipos en la multiplicacion se esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
-              this.line, this.column);
-          tree.excepciones.push(error);
-          tree.console.push(error.toString());
-          return error;
-      }
-      case '/':
-        if (this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.NUMBER) {
-          this.type = new Type(types.NUMBER);
-          if (rResult === 0) {
-              const error = new Exception('Semantico',
-                  `Error aritmetico, La division con cero no esta permitida`,
-                  this.line, this.column);
+
+      if (
+        this.arg1.type.type === types.NUMBER &&
+        this.arg2.type.type === types.NUMBER
+      ) {
+        this.type = new Type(types.NUMBER);
+        switch (this.op) {
+          case '+':
+            return lResult + rResult;
+            break;
+          case '-':
+            return lResult - rResult;
+            break;
+          case '*':
+            return lResult * rResult;
+            break;
+          case '/':
+            if (rResult === 0) {
+              const error = new ExceptionST(
+                TypeError.SEMANTICO,
+                `La division con cero no esta permitida`,
+                this.line,
+                this.column
+              );
               tree.excepciones.push(error);
               tree.console.push(error.toString());
               return error;
-          }
-          return lResult / rResult;
-        }else {
-          const error = new Exception('Semantico',
-              `Error de tipos en la division se esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
-              this.line, this.column);
-          tree.excepciones.push(error);
-          tree.console.push(error.toString());
-          return error;
-      }
-      case '--':
-        if (this.arg1.type.type === types.NUMBER) {
-          this.type = new Type(types.NUMBER);
-          return lResult * -1;
-      } else {
-          const error = new Exception('Semantico',
-              `Error de tipos en el operador unario se esta tratando de operar ${this.arg1.type.type}`,
-              this.line, this.column);
-          tree.excepciones.push(error);
-          tree.console.push(error.toString());
-          return error;
-      }
+            } else {
+              return lResult / rResult;
+            }
+            break;
+          case '%':
+            return lResult % rResult;
+            break;
+          case '**':
+            return lResult ** rResult;
+            break;
+          default:
+            const error = new ExceptionST(
+              TypeError.SEMANTICO,
+              'Operador desconocido.',
+              this.line,
+              this.column
+            );
+            tree.excepciones.push(error);
+            tree.console.push(error.toString());
+            return error;
+            break;
+        }
+      } else if (
+        this.arg1.type.type === types.STRING &&
+        this.arg2.type.type === types.STRING
+      ) {
+        this.type = new Type(types.STRING);
+        switch (this.op) {
+          case '+':
+            return lResult + rResult;
+            break;
+          default:
+            const error = new ExceptionST(
+              TypeError.SEMANTICO,
+              'Operador desconocido.',
+              this.line,
+              this.column
+            );
+            tree.excepciones.push(error);
+            tree.console.push(error.toString());
+            return error;
+            break;
+        }
+      } else if (
+        this.arg1.type.type === types.ARRAY &&
+        this.arg2.type.type === types.ARRAY
+      ) {
+        //ARRAYS
 
-      default:
-        const error = new Exception('Semantico',
-        `Error, Operador desconocido`,
-        this.line, this.column);
-    tree.excepciones.push(error);
-    tree.console.push(error.toString());
-    return error;
+        return null;
+      } else {
+        const error = new ExceptionST(
+          TypeError.SEMANTICO,
+          `No se pueden operar  ${this.arg1.type.type} y ${this.arg2.type.type}`,
+          this.line,
+          this.column
+        );
+        tree.excepciones.push(error);
+        tree.console.push(error.toString());
+        return error;
+      }
+    } else {
+      // SOLO VIENE EL NODO IZQUIERDO
+
+      if (this.arg1.type.type === types.NUMBER) {
+        this.type = new Type(types.NUMBER);
+        switch (this.op) {
+          case '++':
+            return lResult + 1;
+            break;
+          case '--':
+            return lResult - 1;
+            break;
+          case '-':
+            return lResult * -1;
+            break;
+          default:
+            const error = new ExceptionST(
+              TypeError.SEMANTICO,
+              'Operador desconocido.',
+              this.line,
+              this.column
+            );
+            tree.excepciones.push(error);
+            tree.console.push(error.toString());
+            return error;
+            break;
+        }
+      } else {
+        //NO ES NUMBER
+        const error = new ExceptionST(
+          TypeError.SEMANTICO,
+          `Un operando aritmético debe ser de tipo number'. ${this.arg1.type.type}`,
+          this.line,
+          this.column
+        );
+        tree.excepciones.push(error);
+        tree.console.push(error.toString());
+        return error;
+      }
     }
   }
 }
