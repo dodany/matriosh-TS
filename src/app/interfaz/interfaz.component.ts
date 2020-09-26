@@ -4,6 +4,7 @@ import { ExceptionST } from '../../st/ExceptionST';
 import { TypeError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode} from '../../nodes/Expresiones/BreakNode';
+import { DataService } from './data.service';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
@@ -23,22 +24,33 @@ export class InterfazComponent implements OnInit {
   chkError: boolean;
   txtoi: String;
 
-  constructor() {
+  constructor( private dataSvc:DataService ) {
     this.chkTree = true;
     this.chkConsola = true;
     this.chkError = true;
 
   }
 
+  ngOnInit(): void {
+  }
+
+  //SERVICIO POST
+
+  saveNew(){
+
+    this.dataSvc.analizar(this.txtIn);
 
 
-  ngOnInit(): void {}
+
+  }
+
 
   /**
    *
    * EJECUTAR
    */
   onEjecutar() {
+
     const result = arith_arbol.parse(this.txtIn);
     this.txtOut = result.val.toString();
 
@@ -55,6 +67,7 @@ export class InterfazComponent implements OnInit {
   }
 
   OnEjecutarTs () {
+
 
     const tree = grammar.parse(this.txtIn);
     const tabla = new Table (null);

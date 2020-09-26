@@ -30,9 +30,7 @@
               "src/graph/chart.js",
               "src/graph/d3.min.js",
               "src/graph/new_nodo.js",
-              "src/graph/require.js",
-              "src/parser/arith_arbol.js",
-              "src/parser/grammar.js"
+              "src/parser/arith_arbol.js"
             ]
           },
           "configurations": {
