@@ -34,8 +34,7 @@
   "include": [
     "./src/**/*",
     "./node_modules/@wtw/**/*",
-    "./node_modules/jqwidgets-scripts/jqwidgets-ts/**/*.ts",
-    "./node_modules/@wtw/src/nodes/Expresiones/idNode.ts"
+    "./node_modules/jqwidgets-scripts/jqwidgets-ts/**/*.ts"
   ]
 }
 }
