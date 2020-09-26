@@ -7,7 +7,7 @@ import { TypeError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode} from '../../nodes/Expresiones/BreakNode';
 
-const parser = require('../../parser/grammar.js');
+//const parser = require('../../parser/grammar.js');
 
 @Injectable({
   providedIn: 'root',
