@@ -24,11 +24,12 @@ export class InterfazComponent implements OnInit {
   chkError: boolean;
   txtoi: String;
 
-  constructor( private dataSvc:DataService ) {
+  constructor(
+    private _dataSvc:DataService
+    ) {
     this.chkTree = true;
     this.chkConsola = true;
     this.chkError = true;
-
   }
 
   ngOnInit(): void {
@@ -38,7 +39,14 @@ export class InterfazComponent implements OnInit {
 
   saveNew(){
 
-    this.dataSvc.analizar(this.txtIn);
+    const a=
+    this._dataSvc.login(this.txtIn).subscribe( response => {
+       response.login;
+    })
+
+    this.txtOut = a.toString();
+
+   //this.txtOut= this.dataSvc.analizar(this.txtIn).subscribe.toString();
 
 
 

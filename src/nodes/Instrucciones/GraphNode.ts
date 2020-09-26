@@ -9,6 +9,9 @@ export class GraphNode extends Node {
   }
 
   execute(table: Table, tree: Tree) {
-    return null;
+
+    let var_: String;
+
+    return var_;
   }
 }

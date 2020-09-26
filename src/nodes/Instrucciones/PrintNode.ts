@@ -13,8 +13,9 @@ export class PrintNode extends Node {
   }
 
   execute ( table:Table, tree:Tree) {
-    const value = this.exp.execute (table, tree);
-    tree.console.push( value);
-    return null;
+
+    let var_: String;
+
+    return var_;
   }
 }

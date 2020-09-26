@@ -5,10 +5,19 @@
     "types": []
   },
   "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
+    "src/main.ts","src/polyfills.ts","./src/nodes/Expresiones/ArithNode.ts",
+    "./src/nodes/Expresiones/LogicNode.ts","./src/nodes/Expresiones/ReturnNode.ts",
+    "./src/nodes/Expresiones/ValueNode.ts","./src/nodes/Expresiones/idNode.ts",
+    "./src/nodes/Instrucciones/AsigNode.ts","./src/nodes/Instrucciones/DeclareNode.ts",
+    "./src/nodes/Instrucciones/IfNode.ts","./src/nodes/Instrucciones/DeclareNode.ts",
+    "./src/nodes/Instrucciones/IfNode.ts","./src/nodes/Instrucciones/WhileNode.ts",
+    "./src/nodes/Expresiones/RelationalNode.ts","./src/nodes/Instrucciones/PrintNode.ts"
   ],
   "include": [
     "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
   ]
 }
