@@ -8,7 +8,9 @@ import { DataService } from './data.service';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
-declare const grammar: any;
+
+const grammar = require('../../parser/grammar.js');
+//declare const grammar: any;
 
 @Component({
   selector: 'app-interfaz',
@@ -39,12 +41,14 @@ export class InterfazComponent implements OnInit {
 
   saveNew(){
 
+    /*
     const a=
     this._dataSvc.login(this.txtIn).subscribe( response => {
        response.login;
     })
+*/
 
-    this.txtOut = a.toString();
+//this.txtOut = a.toString();
 
    //this.txtOut= this.dataSvc.analizar(this.txtIn).subscribe.toString();
 
@@ -58,6 +62,7 @@ export class InterfazComponent implements OnInit {
    * EJECUTAR
    */
   onEjecutar() {
+
 
     const result = arith_arbol.parse(this.txtIn);
     this.txtOut = result.val.toString();
@@ -76,7 +81,7 @@ export class InterfazComponent implements OnInit {
 
   OnEjecutarTs () {
 
-
+    console.log ("EJECUTAR-TS");
     const tree = grammar.parse(this.txtIn);
     const tabla = new Table (null);
     this.txtOut = tree.val.toString();

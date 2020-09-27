@@ -152,6 +152,7 @@ case 33:
 break;
 case 34:
  this.$ = new ArithNode($$[$0-2], $$[$0], '+', _$.first_line, _$.first_column);
+                                  console.log ( $$[$0-2].node + ' -+ -'  + _$.first_column);
                                    node: newNode(yy, yystate, $$[$0-2].node, $$[$0-1], $$[$0].node);                
 break;
 case 35:
@@ -216,7 +217,8 @@ case 50:
  this.$ = new LogicNode($$[$0-1], null, '!', _$.first_line, _$.first_column); 
 break;
 case 51:
- this.$ = new ValueNode(new Type(types.NUMBER), Number($$[$0]), _$.first_line, _$.first_column); 
+ this.$ = new ValueNode(new Type(types.NUMBER), Number($$[$0]), _$.first_line, _$.first_column);
+                                        console.log(Number($$[$0])*10);
 break;
 case 52:
  this.$ = new ValueNode(new Type(types.BOOLEAN), true, _$.first_line, _$.first_column); 
