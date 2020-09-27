@@ -3,7 +3,7 @@
 @import '~codemirror/addon/fold/foldgutter.css';
 @import '~codemirror/addon/lint/lint.css';
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-
+@import '~codemirror/theme/3024-day.css';
 
 .node circle {
   fill: orange;

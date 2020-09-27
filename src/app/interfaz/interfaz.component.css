@@ -93,7 +93,7 @@ p {
 .card.card-size {
 
   height: auto; /*************/
-  width: 720px;
+  width: 620px;
   display:inline;
 }
 
@@ -128,7 +128,7 @@ p {
 /* button  */
 .example-button-row {
   text-align: right;
-  width: 720px;
+  width: 620px;
   /*
   border: 1px solid rgb(33, 4, 49);
   background-color: rgb(144, 219, 30);

@@ -3,11 +3,11 @@
 </div>
 
 <!-- <div class="content">-->
-
+<!--
 <mat-divider></mat-divider>
 <mat-divider></mat-divider>
 <mat-divider></mat-divider>
-
+-->
 <div class="card-container">
   <div class="card card-size" tabindex="0">
 
@@ -28,8 +28,8 @@
     </div>
     <div class="example-button-row">
       <button mat-raised-button (click)="onCleanIn()">LImpiar</button>
-      <button mat-raised-button (click)="OnEjecutarTs()">Traducir</button>
-      <button mat-raised-button (click)="onEjecutar()">Ejecutar</button>
+      <button mat-raised-button (click)="onEjecutar()">Traducir</button>
+      <button mat-raised-button (click)="OnEjecutarTs()">Ejecutar</button>
     </div>
 
   </div>
@@ -68,33 +68,92 @@
   </div>
 
 </div>
+
+<!--
 <mat-divider></mat-divider>
 <mat-divider></mat-divider>
 <mat-divider></mat-divider>
 
+
 <div class="card-container">
   <div class="card card-size" tabindex="0">
-    <h2>Consola</h2>
-    <!-- Terminal -->
+    <h2>Errores</h2>
+
     <div class="terminal">
       <pre> ng generate component xyz</pre>
     </div>
   </div>
   <div class="card card-size" tabindex="0">
-    <h2>Árbol</h2>
+    <h2>Tabla simbolos</h2>
   </div>
 </div>
-
-
-
-<!-- </div>-->
+ </div>
 
 <div>
   <span class="version-info"> Dodany Girón - 200511896 </span>
 </div>
 
-<mat-divider></mat-divider>
-<mat-divider></mat-divider>
-<mat-divider></mat-divider>
 
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+-->
 
+<div class="card-container">
+  <div class="card card-size" tabindex="0">
+
+    <div class="card card-size ">
+      <h3 class="h3-style"> Errores:</h3>
+      <ngx-codemirror [(ngModel)]="txtErrores"
+       [options]="{
+            lineNumbers: true,
+            theme: '3024-day',
+            mode: 'javascript',
+            lineWrapping: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            lint: true
+        }" #txtEntrada> </ngx-codemirror>
+    </div>
+    <div class="example-button-row">
+      <button mat-raised-button (click)="onCleanError()">LImpiar</button>
+    </div>
+
+  </div>
+
+  <div class="card card-size" tabindex="0">
+    <div class="card card-size ">
+      <h3 class="h3-style"> Pila:</h3>
+      <ngx-codemirror [(ngModel)]="txtPila"
+        [options]="{
+            lineNumbers: true,
+            theme: '3024-day',
+            mode: 'javascript',
+            lineWrapping: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            lint: true
+        }" #txtSalida> </ngx-codemirror>
+    </div>
+
+    <div class="example-button-row">
+
+      <button mat-raised-button (click)="onCleanPila()">Limpiar</button>
+
+    </div>
+
+    <div class="example-button-row">
+
+      <div>
+        <span class="version-info"> Dodany Girón - 200511896 </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
