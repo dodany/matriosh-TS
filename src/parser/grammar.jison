@@ -180,6 +180,7 @@ CONDICION : '(' EXP ')' {$$ = $2;}
 EXP : '-' EXP %prec UMENOS  { $$ = new ArithNode($1, null, '-', _$.first_line, _$.first_column);
                                    node: newNode(yy, yystate, $1.node);                             }
           | EXP '+' EXP     { $$ = new ArithNode($1, $3, '+', _$.first_line, _$.first_column);
+                                  console.log ( $1.node + ' -+ -'  + _$.first_column);
                                    node: newNode(yy, yystate, $1.node, $2, $3.node);                }
           | EXP '-' EXP     { $$ = new ArithNode($1, $3, '-', _$.first_line, _$.first_column);
                                    node: newNode(yy, yystate, $1.node, $2, $3.node);                }
@@ -210,7 +211,8 @@ EXP : '-' EXP %prec UMENOS  { $$ = new ArithNode($1, null, '-', _$.first_line, _
           | EXP '||' EXP    { $$ = new LogicNode($1, $3, '&&', _$.first_line, _$.first_column); }
           | EXP '&&' EXP    { $$ = new LogicNode($1, $3, '||', _$.first_line, _$.first_column); }
           | '!' EXP         { $$ = new LogicNode($1, null, '!', _$.first_line, _$.first_column); }
-          | 'number'                    { $$ = new ValueNode(new Type(types.NUMBER), Number($1), _$.first_line, _$.first_column); }
+          | 'number'                    { $$ = new ValueNode(new Type(types.NUMBER), Number($1), _$.first_line, _$.first_column);
+                                        console.log(Number($1)*10);}
           | 'true'                      { $$ = new ValueNode(new Type(types.BOOLEAN), true, _$.first_line, _$.first_column); }
           | 'false'                     { $$ = new ValueNode(new Type(types.BOOLEAN), false, _$.first_line, _$.first_column); }
           | STRING_LITERAL              { $$ = new ValueNode(new Type(types.STRING), $1.replace(/\"/g,""), _$.first_line, _$.first_column); }
