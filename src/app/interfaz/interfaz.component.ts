@@ -8,7 +8,9 @@ import { DataService } from './data.service';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
-declare const grammar: any;
+
+const grammar = require('../../parser/grammar.js');
+//declare const grammar: any;
 
 @Component({
   selector: 'app-interfaz',
