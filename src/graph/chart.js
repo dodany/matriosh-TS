@@ -1,6 +1,4 @@
 function generateTree(treeData) {
-  console.log("hola hola");
-
 
   let size = getTreeLength(treeData[0]);
   console.log(size);

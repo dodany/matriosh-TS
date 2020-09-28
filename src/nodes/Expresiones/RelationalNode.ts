@@ -3,7 +3,7 @@ import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { types, Type } from '../../st/Type';
 import { ExceptionST } from '../../st/ExceptionST';
-import { TypeError } from '../../st/TypeError';
+import { TypeError, typesError } from '../../st/TypeError';
 
 export class RelationalNode extends Node {
   arg1: Node;
@@ -53,7 +53,7 @@ export class RelationalNode extends Node {
           return lResult != rResult;
         default:
           const error = new ExceptionST(
-            TypeError.SEMANTICO,
+            typesError.SEMANTICO,
             'Operador desconocido',
             this.line,
             this.column
@@ -64,7 +64,7 @@ export class RelationalNode extends Node {
       }
     } else {
       const error = new ExceptionST(
-        TypeError.SEMANTICO,
+        typesError.SEMANTICO,
         `Problema con los tipos que esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
         this.line,
         this.column

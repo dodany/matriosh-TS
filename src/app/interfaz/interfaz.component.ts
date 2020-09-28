@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Table } from '../../st/Table';
 import { ExceptionST } from '../../st/ExceptionST';
-import { TypeError } from '../../st/TypeError';
+import { typesError, TypeError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode} from '../../nodes/Expresiones/BreakNode';
 import { DataService } from './data.service';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
-
 const grammar = require('../../parser/grammar.js');
-//declare const grammar: any;
 
 @Component({
   selector: 'app-interfaz',
@@ -21,13 +19,15 @@ const grammar = require('../../parser/grammar.js');
 export class InterfazComponent implements OnInit {
   txtIn: string;
   txtOut: string;
+  txtErrores: string;
+  txtPila: string;
   chkTree: boolean;
   chkConsola: boolean;
   chkError: boolean;
   txtoi: String;
 
   constructor(
-    private _dataSvc:DataService
+    //private _dataSvc:DataService
     ) {
     this.chkTree = true;
     this.chkConsola = true;
@@ -35,25 +35,6 @@ export class InterfazComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
-
-  //SERVICIO POST
-
-  saveNew(){
-
-    /*
-    const a=
-    this._dataSvc.login(this.txtIn).subscribe( response => {
-       response.login;
-    })
-*/
-
-//this.txtOut = a.toString();
-
-   //this.txtOut= this.dataSvc.analizar(this.txtIn).subscribe.toString();
-
-
-
   }
 
 
@@ -81,31 +62,41 @@ export class InterfazComponent implements OnInit {
 
   OnEjecutarTs () {
 
-    console.log ("EJECUTAR-TS");
-    const tree = grammar.parse(this.txtIn);
+    const tree_ant = grammar.parse(this.txtIn);
+    const tree= tree_ant.val;
     const tabla = new Table (null);
-    this.txtOut = tree.val.toString();
 
     tree.instructions.map((m: any) => {
       const res = m.execute(tabla, tree);
 
+      console.log(m);
+
       if (res instanceof BreakNode) {
-        const error = new ExceptionST(TypeError.SEMANTICO,
+        const error = new ExceptionST(typesError.SEMANTICO,
           `Sentencia break fuera de un ciclo`,
           res.line, res.column);
         tree.excepciones.push(error);
         tree.console.push(error.toString());
       } else if (res instanceof ContinueNode) {
-        const error = new ExceptionST(TypeError.SEMANTICO,
+        const error = new ExceptionST(typesError.SEMANTICO,
           `Sentencia continue fuera de un ciclo`,
           res.line, res.column);
         tree.excepciones.push(error);
         tree.console.push(error.toString());
       }
+      this.txtOut = tree.console.toString();
     });
+
+    if (this.chkTree) {
+      if (<HTMLInputElement>document.getElementById('grafo')) {
+        (<HTMLInputElement>document.getElementById('grafo')).remove();
+      }
+      generateTree([tree_ant.node]);
+    } else {
+      (<HTMLInputElement>document.getElementById('grafo')).remove();
+    }
+
   }
-
-
 
   /**
    *
@@ -129,4 +120,12 @@ export class InterfazComponent implements OnInit {
     this.txtOut = '';
   }
 
+
+  onCleanError(){
+    this.txtErrores='';
+  }
+
+  onCleanPila(){
+    this.txtPila='';
+  }
 }

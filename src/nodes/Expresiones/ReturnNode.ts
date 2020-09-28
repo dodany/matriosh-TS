@@ -2,7 +2,7 @@ import { Node } from '../Node';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { ExceptionST } from '../../st/ExceptionST';
-import { TypeError } from '../../st/TypeError';
+import { TypeError, typesError } from '../../st/TypeError';
 
 export class ReturnNode extends Node {
   value: Node;
@@ -22,7 +22,7 @@ export class ReturnNode extends Node {
 
       if (result === null) {
         const error = new ExceptionST(
-          TypeError.SEMANTICO,
+          typesError.SEMANTICO,
           'Este valor No se puede retornar',
           this.line,
           this.column
