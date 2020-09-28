@@ -3,7 +3,7 @@ import { ExceptionST } from '../../st/ExceptionST';
 import { types, Type } from '../../st/Type';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
-import { TypeError } from '../../st/TypeError';
+import { TypeError, typesError } from '../../st/TypeError';
 
 export class ArithNode extends Node {
   arg1: Node;
@@ -54,7 +54,7 @@ export class ArithNode extends Node {
           case '/':
             if (rResult === 0) {
               const error = new ExceptionST(
-                TypeError.SEMANTICO,
+                typesError.SEMANTICO,
                 `La division con cero no esta permitida`,
                 this.line,
                 this.column
@@ -74,7 +74,7 @@ export class ArithNode extends Node {
             break;
           default:
             const error = new ExceptionST(
-              TypeError.SEMANTICO,
+              typesError.SEMANTICO,
               'Operador desconocido.',
               this.line,
               this.column
@@ -95,7 +95,7 @@ export class ArithNode extends Node {
             break;
           default:
             const error = new ExceptionST(
-              TypeError.SEMANTICO,
+              typesError.SEMANTICO,
               'Operador desconocido.',
               this.line,
               this.column
@@ -114,7 +114,7 @@ export class ArithNode extends Node {
         return null;
       } else {
         const error = new ExceptionST(
-          TypeError.SEMANTICO,
+          typesError.SEMANTICO,
           `No se pueden operar  ${this.arg1.type.type} y ${this.arg2.type.type}`,
           this.line,
           this.column
@@ -140,7 +140,7 @@ export class ArithNode extends Node {
             break;
           default:
             const error = new ExceptionST(
-              TypeError.SEMANTICO,
+              typesError.SEMANTICO,
               'Operador desconocido.',
               this.line,
               this.column
@@ -153,7 +153,7 @@ export class ArithNode extends Node {
       } else {
         //NO ES NUMBER
         const error = new ExceptionST(
-          TypeError.SEMANTICO,
+          typesError.SEMANTICO,
           `Un operando aritmético debe ser de tipo number'. ${this.arg1.type.type}`,
           this.line,
           this.column

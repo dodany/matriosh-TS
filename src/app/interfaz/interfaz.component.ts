@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Table } from '../../st/Table';
 import { ExceptionST } from '../../st/ExceptionST';
-import { TypeError } from '../../st/TypeError';
+import { typesError, TypeError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode} from '../../nodes/Expresiones/BreakNode';
 import { DataService } from './data.service';
@@ -69,14 +69,16 @@ export class InterfazComponent implements OnInit {
     tree.instructions.map((m: any) => {
       const res = m.execute(tabla, tree);
 
+      console.log(m);
+
       if (res instanceof BreakNode) {
-        const error = new ExceptionST(TypeError.SEMANTICO,
+        const error = new ExceptionST(typesError.SEMANTICO,
           `Sentencia break fuera de un ciclo`,
           res.line, res.column);
         tree.excepciones.push(error);
         tree.console.push(error.toString());
       } else if (res instanceof ContinueNode) {
-        const error = new ExceptionST(TypeError.SEMANTICO,
+        const error = new ExceptionST(typesError.SEMANTICO,
           `Sentencia continue fuera de un ciclo`,
           res.line, res.column);
         tree.excepciones.push(error);

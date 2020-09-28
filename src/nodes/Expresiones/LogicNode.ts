@@ -3,7 +3,7 @@ import { types, Type } from '../../st/Type';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { ExceptionST } from '../../st/ExceptionST';
-import { TypeError } from '../../st/TypeError';
+import { TypeError,typesError } from '../../st/TypeError';
 
 export class LogicNode extends Node {
   arg1: Node;
@@ -48,7 +48,7 @@ export class LogicNode extends Node {
           default:
             // operador no reconocido
             const error = new ExceptionST(
-              TypeError.SEMANTICO,
+              typesError.SEMANTICO,
               'Operador desconocido.',
               this.line,
               this.column
@@ -60,7 +60,7 @@ export class LogicNode extends Node {
         }
       } else {
         const error = new ExceptionST(
-          TypeError.SEMANTICO,
+          typesError.SEMANTICO,
           `Problema con los tipos que esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
           this.line,
           this.column
@@ -78,7 +78,7 @@ export class LogicNode extends Node {
         } else {
           // operador no reconocido
           const error = new ExceptionST(
-            TypeError.SEMANTICO,
+            typesError.SEMANTICO,
             'Operador desconocido.',
             this.line,
             this.column
@@ -89,7 +89,7 @@ export class LogicNode extends Node {
         }
       } else {
         const error = new ExceptionST(
-          TypeError.SEMANTICO,
+          typesError.SEMANTICO,
           `Problema con los tipos que esta tratando de operar ${this.arg1.type.type}`,
           this.line,
           this.column
