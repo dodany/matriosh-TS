@@ -31,7 +31,10 @@
               "src/graph/d3.min.js",
               "src/graph/new_nodo.js",
               "src/parser/arith_arbol.js"
-            ]
+            ],
+            "allowedCommonJsDependencies": [
+              "lodash"
+           ]
           },
           "configurations": {
             "production": {

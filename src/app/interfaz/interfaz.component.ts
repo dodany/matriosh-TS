@@ -4,7 +4,6 @@ import { ExceptionST } from '../../st/ExceptionST';
 import { typesError, TypeError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode} from '../../nodes/Expresiones/BreakNode';
-import { DataService } from './data.service';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
