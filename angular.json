@@ -15,14 +15,7 @@
           "options": {
             "allowedCommonJsDependencies": [
               "lodash",
-              "@ctrl/ngx-codemirror",
-              "codemirror",
-              "devextreme-angular",
-              "devextreme",
-              "@firebase",
-              "@angular/fire",
-              "devexpress-richedit",
-              "x-data-spreadsheet"
+               "codemirror"
            ],
             "outputPath": "dist/matriosht-TS",
             "index": "src/index.html",
