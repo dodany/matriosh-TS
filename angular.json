@@ -14,7 +14,13 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "lodash"
+              "lodash",
+              "devextreme-angular",
+              "devextreme",
+              "@firebase",
+              "@angular/fire",
+              "devexpress-richedit",
+              "x-data-spreadsheet"
            ],
             "outputPath": "dist/matriosht-TS",
             "index": "src/index.html",
