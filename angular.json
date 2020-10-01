@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "matriosht-TS": {
+    "matriosh-ts": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -17,7 +17,7 @@
               "lodash",
                "codemirror"
            ],
-            "outputPath": "dist/matriosht-TS",
+            "outputPath": "dist/matriosh-ts",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -71,18 +71,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "matriosht-TS:build"
+            "browserTarget": "matriosh-ts:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "matriosht-TS:build:production"
+              "browserTarget": "matriosh-ts:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "matriosht-TS:build"
+            "browserTarget": "matriosh-ts:build"
           }
         },
         "test": {
@@ -119,11 +119,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "matriosht-TS:serve"
+            "devServerTarget": "matriosh-ts:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "matriosht-TS:serve:production"
+              "devServerTarget": "matriosh-ts:serve:production"
             }
           }
         },
@@ -134,7 +134,7 @@
       }
     }
   },
-  "defaultProject": "matriosht-TS",
+  "defaultProject": "matriosh-ts",
   "cli": {
     "analytics": "c380a0bf-ae39-4b3e-b792-cfa3749d1455"
   }
