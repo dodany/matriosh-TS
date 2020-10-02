@@ -4,6 +4,7 @@ import { ExceptionST } from '../../st/ExceptionST';
 import { typesError, TypeError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode} from '../../nodes/Expresiones/BreakNode';
+import { ErrorNode } from 'src/nodes/Instrucciones/ErrorNode';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
@@ -71,19 +72,27 @@ export class InterfazComponent implements OnInit {
       console.log(m);
 
       if (res instanceof BreakNode) {
-        const error = new ExceptionST(typesError.SEMANTICO,
-          `Sentencia break fuera de un ciclo`,
-          res.line, res.column);
+
+          const error = new ExceptionST(  typesError.SEMANTICO,
+            `Sentencia break fuera de un ciclo` +",",
+            "[" + res.line +"," + res.column + "]");
+
         tree.excepciones.push(error);
-        tree.console.push(error.toString());
+        //tree.console.push(error.toString());
+
       } else if (res instanceof ContinueNode) {
-        const error = new ExceptionST(typesError.SEMANTICO,
-          `Sentencia continue fuera de un ciclo`,
-          res.line, res.column);
+
+        const error = new ExceptionST(  typesError.SEMANTICO,
+          `Sentencia continue fuera de un ciclo` +",",
+          "[" + res.line +"," + res.column + "]");
+
         tree.excepciones.push(error);
-        tree.console.push(error.toString());
+
       }
+
+      this.txtErrores= tree.excepciones.toString();
       this.txtOut = tree.console.toString();
+
     });
 
     if (this.chkTree) {

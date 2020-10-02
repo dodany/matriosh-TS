@@ -52,25 +52,22 @@ export class RelationalNode extends Node {
         case '!=':
           return lResult != rResult;
         default:
-          const error = new ExceptionST(
-            typesError.SEMANTICO,
-            'Operador desconocido',
-            this.line,
-            this.column
-          );
+
+          const error = new ExceptionST(  typesError.SEMANTICO,
+            'Operador desconocido'+"," ,
+            "[" + this.line +"," + this.column + "]");
+
           tree.excepciones.push(error);
-          tree.console.push(error.toString());
+          //tree.console.push(error.toString());
           return error;
       }
     } else {
-      const error = new ExceptionST(
-        typesError.SEMANTICO,
-        `Problema con los tipos que esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`,
-        this.line,
-        this.column
-      );
+
+      const error = new ExceptionST(  typesError.SEMANTICO,
+        `Problema con los tipos que esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`+",",
+        "[" + this.line +"," + this.column + "]");
       tree.excepciones.push(error);
-      tree.console.push(error.toString());
+      //tree.console.push(error.toString());
       return error;
     }
   }

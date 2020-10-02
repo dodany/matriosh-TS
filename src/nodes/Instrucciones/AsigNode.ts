@@ -3,6 +3,7 @@ import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { ExceptionST } from '../../st/ExceptionST';
 import { Symbol } from '../../st/Symbol';
+import { TypeError, typesError } from '../../st/TypeError';
 
 export class AsigNode extends Node {
   id: String;
@@ -24,26 +25,21 @@ export class AsigNode extends Node {
     var_: table.getVariable(this.id);
 
     if (var_ == null) {
-      const error = new ExceptionST(
-        'Semantico',
-        'No se ha encontrado la variable ' + this.id,
-        this.line,
-        this.column
-      );
+
+      const error = new ExceptionST(  typesError.SEMANTICO,
+        'No se ha encontrado la variable ' + this.id +",",
+        "[" + this.line +"," + this.column + "]");
+
       tree.excepciones.push(error);
-      tree.console.push(error.toString());
       return error;
     }
 
     if (this.value.type.type != var_.type.type) {
-      const error = new ExceptionST(
-        'Semantico',
-        `No se puede asignar la variable porque los tipos no coinciden.`,
-        this.line,
-        this.column
-      );
+
+      const error = new ExceptionST(  typesError.SEMANTICO,
+        `No se puede asignar la variable porque los tipos no coinciden.` +",",
+        "[" + this.line +"," + this.column + "]");
       tree.excepciones.push(error);
-      tree.console.push(error.toString());
       return error;
     }
 

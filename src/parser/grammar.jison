@@ -17,6 +17,9 @@
     const {WhileNode} = require('../nodes/Instrucciones/WhileNode');
     const {DeclareNode} = require('../nodes/Instrucciones/DeclareNode');
     const {AsigNode} = require('../nodes/Instrucciones/AsigNode');
+    const {ErrorNode}  = require('../nodes/Instrucciones/ErrorNode');
+
+
 
 %}
 
@@ -24,7 +27,7 @@
 %options case-sensitive
 entero [0-9]+
 decimal {entero}"."{entero}
-stringliteral (\"[^"]*\")
+stringliteral (\'[^']*\')|(\"[^"]*\")
 identifier ([a-zA-Z_])[a-zA-Z0-9_]*
 number [0-9]+("."[0-9]+)?\b
 %%
@@ -59,7 +62,6 @@ number [0-9]+("."[0-9]+)?\b
 "}"                   return '}'
 "true"                return 'true'
 "false"               return 'false'
-"print"               return 'print'
 "if"                  return 'if'
 "else"                return 'else'
 "while"               return 'while'
@@ -88,9 +90,13 @@ number [0-9]+("."[0-9]+)?\b
 {identifier}          return 'identifier'
 {stringliteral}       return 'STRING_LITERAL'
 <<EOF>>               return 'EOF'
-.                     { new ExceptionST( typesError.LEXICO,
-                        yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column,
-                        this.line,this.column); }
+.                     { console.log('Este es un error léxico: ' + yytext + ', en la linea: ' +
+                        yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+
+                        new ErrorNode( new ExceptionST(  typesError.LEXICO,
+                                          "Carácter no reconocido "+ yytext 	+ " - " ,
+                                      "[" + yylloc.first_line +"," + yylloc.first_colum + "]"));
+                          }
 
 /lex
 %left 'else'
@@ -129,39 +135,39 @@ INSTRUCCION : PRINT             {$$ = { val:$1.val,
             | SWITCH            {$$ = $1;}
             | DECLARACION       {$$ = $1;}
             | ASIGNACION        {$$ = $1;}
-            | 'continue' ';'    {$$ = new ContinueNode(_$.first_line, _$.first_column)}
-            | 'break' ';'       {$$ = new BreakNode(_$.first_line, _$.first_column)}
-            | 'return' ';'      {$$ = new ReturnNode(null,_$.first_line, _$.first_column)}
-            | 'return' EXP ';'  {$$ = new ReturnNode($2,_$.first_line, _$.first_column)}
-            | error             {  new ExceptionST( typesError.SINTACTICO,
-                                   yytext + ', en la linea: ' + _$.first_line + ', en la columna: ' + _$.first_column,
-                                  _$.first_line,_$.first_column); }
+            | 'continue' ';'    {$$ = new ContinueNode(this._$.first_line, this._$.first_column)}
+            | 'break' ';'       {$$ = new BreakNode(this._$.first_line, this._$.first_column)}
+            | 'return' ';'      {$$ = new ReturnNode(null,this._$.first_line, this._$.first_column)}
+            | 'return' EXP ';'  {$$ = new ReturnNode($2,this._$.first_line, this._$.first_column)}
+            | error             {$$ ={ val: new ErrorNode( new ExceptionST(  typesError.SINTACTICO,
+                                          "Instrucción no reconocida "+ $1 	+ " - " ,
+                                      "[" + this._$.first_line +"," + this._$.first_column + "]")),
+                                       node: newNode(yy, yystate, [])   } }
             ;
 
 
-DECLARACION : TIPO identifier '=' EXP ';' {$$ = new DeclareNode($1, $2, $4, _$.first_line, _$.first_column);}
+DECLARACION : 'TIPO' identifier '=' EXP ';' {$$ = new DeclareNode($1, $2, $4, this._$.first_line, this._$.first_column);}
             ;
 
-ASIGNACION : identifier '=' EXP ';' {$$ = new AsigNode($1, $3, _$.first_line, _$.first_column);}
+ASIGNACION : identifier '=' EXP ';' {$$ = new AsigNode($1, $3, this._$.first_line, this._$.first_column);}
            ;
 
-TIPO : 'number' {$$ = new Type(types.NUMBER);}
-     | 'string' {$$ = new Type(types.STRING);}
-     | 'boolean' {$$ = new Type(types.BOOLEAN);}
+TIPO : 'let' {$$ = new Type(types.NUMBER);}
+     | 'const' {$$ = new Type(types.STRING);}
      ;
 
-PRINT : 'console.log' '(' EXP ')' ';' { $$ = { val:new PrintNode($3.val, _$.first_line, _$.first_column),
+PRINT : 'console.log' '(' EXP ')' ';' { $$ = { val:new PrintNode($3.val, this._$.first_line, this._$.first_column),
                                                node: newNode(yy, yystate, $3.node)}                               }
       ;
 
-GRAPH : 'graficar_ts' '('  ')' ';' { $$ = new GraphNode($3, _$.first_line, _$.first_column);}
+GRAPH : 'graficar_ts' '('  ')' ';' { $$ = new GraphNode($3, this._$.first_line, this._$.first_column);}
       ;
 
-IF : 'if' CONDICION BLOQUE_INSTRUCCIONES                              {$$ = { val: new IfNode($2.val, $3.val, [], _$.first_line, _$.first_column),
+IF : 'if' CONDICION BLOQUE_INSTRUCCIONES                              {$$ = { val: new IfNode($2.val, $3.val, [], this._$.first_line, this._$.first_column),
                                                                                             node: newNode(yy, yystate, $1, $2.node, $3.node)             }}
-   | 'if' CONDICION BLOQUE_INSTRUCCIONES 'else' BLOQUE_INSTRUCCIONES  {$$ = { val: new IfNode($2.val, $3.val, $5.val, _$.first_line, _$.first_column),
+   | 'if' CONDICION BLOQUE_INSTRUCCIONES 'else' BLOQUE_INSTRUCCIONES  {$$ = { val: new IfNode($2.val, $3.val, $5.val, this._$.first_line, this._$.first_column),
                                                                                             node: newNode(yy, yystate, $1, $2.node, $3.node,$4,$5.node)  }}
-   | 'if' CONDICION BLOQUE_INSTRUCCIONES 'else' IF                    {$$ = { val: new IfNode($2.val, $4.val, [$5].val, _$.first_line, _$.first_column),
+   | 'if' CONDICION BLOQUE_INSTRUCCIONES 'else' IF                    {$$ = { val: new IfNode($2.val, $4.val, [$5].val, this._$.first_line, this._$.first_column),
                                                                                             node: newNode(yy, yystate, $1, $2.node, $4.node,$6,$8.node)  }}
    ;
 
@@ -176,7 +182,7 @@ CASELIST : CASELIST CASE
 CASE : 'case' CONDICION ':'
       ;
 
-WHILE : 'while' CONDICION BLOQUE_INSTRUCCIONES {$$ = new WhileNode($2, $3, _$.first_line, _$.first_column); }
+WHILE : 'while' CONDICION BLOQUE_INSTRUCCIONES {$$ = new WhileNode($2, $3, this._$.first_line, this._$.first_column); }
       ;
 
 BLOQUE_INSTRUCCIONES : '{' INSTRUCCIONES '}' {$$ = { val: $2.val,
@@ -188,60 +194,60 @@ BLOQUE_INSTRUCCIONES : '{' INSTRUCCIONES '}' {$$ = { val: $2.val,
 
 CONDICION : '(' EXP ')' {$$ = { val: $2.val ,
                                 node: newNode(yy, yystate, $1, $2.node) }} //DUDA
-          | error       {  new ExceptionST( typesError.SINTACTICO,
-                            yytext + ', en la linea: ' + _$.first_line + ', en la columna: ' + _$.first_column,
-                            _$.first_line,_$.first_column); }
-          ;
+                    ;
 
-EXP : '-' EXP %prec UMENOS  { $$ = { val: new ArithNode($1.val, null, '-', _$.first_line, _$.first_column),
+EXP : '-' EXP %prec UMENOS  { $$ = { val: new ArithNode($1.val, null, '-', this._$.first_line, this._$.first_column),
                                    node: newNode(yy, yystate, $1.node)}                                  }
-          | EXP '+' EXP     { $$ = { val: new ArithNode($1.val, $3.val, '+', _$.first_line, _$.first_column),
+
+          | EXP '+' EXP     { $$ = { val: new ArithNode($1.val, $3.val, '+', this._$.first_line, this._$.first_column),
+                                    node: newNode(yy, yystate, $1.node, $2, $3.node) }    ;}
+
+          | EXP '-' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '-', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '-' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '-', _$.first_line, _$.first_column),
+          | EXP '*' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '*', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '*' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '*', _$.first_line, _$.first_column),
+          | EXP '/' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '/', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '/' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '/', _$.first_line, _$.first_column),
+          | EXP '%' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '%', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '%' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '%', _$.first_line, _$.first_column),
+          | EXP '**' EXP    { $$ = { val:  new ArithNode($1.val, $3.val, '**', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '**' EXP    { $$ = { val:  new ArithNode($1.val, $3.val, '**', _$.first_line, _$.first_column),
-                                    node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '++'        { $$ = { val:  new ArithNode($1.val, null, '++',_$.first_line, _$.first_column),
+          | EXP '++'        { $$ = { val:  new ArithNode($1.val, null, '++',this._$.first_line, this._$.first_column),
                                  node: newNode(yy, yystate, $1.node)}                                     }
-          | EXP '--'        { $$ = { val:  new ArithNode($1.val, null, '--',_$.first_line, _$.first_column),
+          | EXP '--'        { $$ = { val:  new ArithNode($1.val, null, '--',this._$.first_line, this._$.first_column),
                                   node: newNode(yy, yystate, $1.node)}                                     }
-          | EXP '<' EXP     { $$ = { val: new RelationalNode($1.val, $3.val, '<', _$.first_line, _$.first_column),
+          | EXP '<' EXP     { $$ = { val: new RelationalNode($1.val, $3.val, '<', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '>' EXP     { $$ = { val: new RelationalNode($1.val, $3.val, '>', _$.first_line, _$.first_column),
+          | EXP '>' EXP     { $$ = { val: new RelationalNode($1.val, $3.val, '>', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '>=' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '>=', _$.first_line, _$.first_column),
+          | EXP '>=' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '>=', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '<=' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '<=', _$.first_line, _$.first_column),
+          | EXP '<=' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '<=', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '==' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '==', _$.first_line, _$.first_column),
+          | EXP '==' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '==', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '!=' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '!=', _$.first_line, _$.first_column),
+          | EXP '!=' EXP    { $$ = { val: new RelationalNode($1.val, $3.val, '!=', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }
-          | EXP '||' EXP    { $$ = { val: new LogicNode($1.val, $3.val, '&&', _$.first_line, _$.first_column),
+          | EXP '||' EXP    { $$ = { val: new LogicNode($1.val, $3.val, '&&', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }              }
-          | EXP '&&' EXP    { $$ = { val: new LogicNode($1.val, $3.val, '||', _$.first_line, _$.first_column),
+          | EXP '&&' EXP    { $$ = { val: new LogicNode($1.val, $3.val, '||', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }              }
-          | '!' EXP         { $$ = { val: new LogicNode($2, null, '!', _$.first_line, _$.first_column),
+          | '!' EXP         { $$ = { val: new LogicNode($2, null, '!', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1, $2.node)    }              } //DUDA
-          | 'number'        { $$ = { val: new ValueNode(new Type(types.NUMBER), Number($1), _$.first_line, _$.first_column),
+
+          | 'number'        { $$ = { val: new ValueNode(new Type(types.NUMBER), Number($1), this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1)} }
-          | 'true'          { $$ = { val: new ValueNode(new Type(types.BOOLEAN), true, _$.first_line, _$.first_column),
+
+          | 'true'          { $$ = { val: new ValueNode(new Type(types.BOOLEAN), true, this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1)} }
-          | 'false'         { $$ = { val: new ValueNode(new Type(types.BOOLEAN), false, _$.first_line, _$.first_column),
+
+          | 'false'         { $$ = { val: new ValueNode(new Type(types.BOOLEAN), false, this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1)} }
-          | STRING_LITERAL  { $$ = { val: new ValueNode(new Type(types.STRING), $1.replace(/\"/g,""), _$.first_line, _$.first_column),
+          | STRING_LITERAL  { $$ = { val: new ValueNode(new Type(types.STRING), $1.replace(/\"/g,"").replace(/\'/g,""), this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1)} }
-          | identifier      { $$ = { val: new IdNode($1, _$.first_line, _$.first_column),
+
+          | identifier      { $$ = { val: new IdNode($1, this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1)} }
           | '(' EXP ')'     { $$ = { val:$2.val,
                                     node: newNode(yy, yystate, $2.node)} }
-          | error           {  new ExceptionST(typesError.SINTACTICO,
-                                 yytext + ', en la linea: ' + _$.first_line + ', en la columna: ' + _$.first_column,
-                              _$.first_line,_$.first_column); }
           ;

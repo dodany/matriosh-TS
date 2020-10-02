@@ -11,9 +11,8 @@ export class PrintNode extends Node {
     this.arg1 = arg1;
   }
 
- execute(table: Table, tree: Tree): any {
+  execute(table: Table, tree: Tree): any {
         const value = this.arg1.execute(table, tree);
-        console.log ( "execute print " +value);
         tree.console.push(value);
         return null;
     }

@@ -4,6 +4,7 @@ import { Tree } from '../../st/Tree';
 import { types, Type } from 'src/st/Type';
 import { ExceptionST } from '../../st/ExceptionST';
 import { Symbol } from '../../st/Symbol';
+import { TypeError, typesError } from '../../st/TypeError';
 
 export class DeclareNode extends Node {
   type: Type;
@@ -30,14 +31,13 @@ export class DeclareNode extends Node {
     }
 
     if (this.type.type != this.value.type.type) {
-      const error = new ExceptionST(
-        'Semantico',
-        `No se puede declarar la variable porque los tipos no coinciden.`,
-        this.line,
-        this.column
-      );
+
+      const error = new ExceptionST(  typesError.SEMANTICO,
+        `No se puede declarar la variable porque los tipos no coinciden.` + ",",
+        "[" + this.line +"," + this.column + "]");
+
       tree.excepciones.push(error);
-      tree.console.push(error.toString());
+      //tree.console.push(error.toString());
       return error;
     }
 
@@ -45,9 +45,12 @@ export class DeclareNode extends Node {
     symbol = new Symbol(this.type, this.id, result);
     const res = table.setVariable(symbol);
     if (res != null) {
-      const error = new ExceptionST('Semantico', res, this.line, this.column);
+
+      const error = new ExceptionST(  typesError.SEMANTICO,
+       res  + ",",
+        "[" + this.line +"," + this.column + "]");
       tree.excepciones.push(error);
-      tree.console.push(error.toString());
+
     }
     return null;
   }

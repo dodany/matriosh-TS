@@ -53,14 +53,13 @@ export class ArithNode extends Node {
             break;
           case '/':
             if (rResult === 0) {
-              const error = new ExceptionST(
-                typesError.SEMANTICO,
-                `La division con cero no esta permitida`,
-                this.line,
-                this.column
-              );
+
+              const error = new ExceptionST(  typesError.SEMANTICO,
+                "La difición con cero no es permitida,",
+                "[" + this.line +"," + this.column + "]");
+
               tree.excepciones.push(error);
-              tree.console.push(error.toString());
+
               return error;
             } else {
               return lResult / rResult;
@@ -73,14 +72,12 @@ export class ArithNode extends Node {
             return lResult ** rResult;
             break;
           default:
-            const error = new ExceptionST(
-              typesError.SEMANTICO,
-              'Operador desconocido.',
-              this.line,
-              this.column
-            );
+            const error = new ExceptionST(  typesError.SEMANTICO,
+              'Operador desconocido, ',
+              "[" + this.line +"," + this.column + "]");
+
             tree.excepciones.push(error);
-            tree.console.push(error.toString());
+            //tree.console.push(error.toString());
             return error;
             break;
         }
@@ -94,14 +91,12 @@ export class ArithNode extends Node {
             return lResult + rResult;
             break;
           default:
-            const error = new ExceptionST(
-              typesError.SEMANTICO,
-              'Operador desconocido.',
-              this.line,
-              this.column
-            );
+          const error = new ExceptionST(  typesError.SEMANTICO,
+            'Operador desconocido, ',
+            "[" + this.line +"," + this.column + "]");
+
             tree.excepciones.push(error);
-            tree.console.push(error.toString());
+           // tree.console.push(error.toString());
             return error;
             break;
         }
@@ -113,14 +108,14 @@ export class ArithNode extends Node {
 
         return null;
       } else {
-        const error = new ExceptionST(
-          typesError.SEMANTICO,
-          `No se pueden operar  ${this.arg1.type.type} y ${this.arg2.type.type}`,
-          this.line,
-          this.column
-        );
+
+        console.log("error de tipos ");
+        const error = new ExceptionST(  typesError.SEMANTICO,
+          `No se pueden operar ` + this.arg1.type.toString() + ` y `  + ` ${this.arg2.type.toString()}` +" - ",
+          "[" + this.line +"," + this.column + "]");
+
         tree.excepciones.push(error);
-        tree.console.push(error.toString());
+        //tree.console.push(error.toString());
         return error;
       }
     } else {
@@ -139,27 +134,25 @@ export class ArithNode extends Node {
             return lResult * -1;
             break;
           default:
-            const error = new ExceptionST(
-              typesError.SEMANTICO,
-              'Operador desconocido.',
-              this.line,
-              this.column
-            );
+
+          const error = new ExceptionST(  typesError.SEMANTICO,
+              'Operador desconocido, ',
+              "[" + this.line +"," + this.column + "]");
+
             tree.excepciones.push(error);
-            tree.console.push(error.toString());
+           // tree.console.push(error.toString());
             return error;
             break;
         }
       } else {
         //NO ES NUMBER
-        const error = new ExceptionST(
-          typesError.SEMANTICO,
-          `Un operando aritmético debe ser de tipo number'. ${this.arg1.type.type}`,
-          this.line,
-          this.column
-        );
+
+        const error = new ExceptionST(  typesError.SEMANTICO,
+          `Un operando aritmético debe ser de tipo number'. ${this.arg1.type.type}` +",",
+          "[" + this.line +"," + this.column + "]");
+
         tree.excepciones.push(error);
-        tree.console.push(error.toString());
+        //tree.console.push(error.toString());
         return error;
       }
     }

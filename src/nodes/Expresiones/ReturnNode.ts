@@ -21,14 +21,14 @@ export class ReturnNode extends Node {
       }
 
       if (result === null) {
-        const error = new ExceptionST(
-          typesError.SEMANTICO,
-          'Este valor No se puede retornar',
-          this.line,
-          this.column
-        );
+
+        const error = new ExceptionST(  typesError.SEMANTICO,
+          'Este valor No se puede retornar' +",",
+          "[" + this.line +"," + this.column + "]");
         tree.excepciones.push(error);
-        tree.console.push(error.toString());
+
+        tree.excepciones.push(error);
+//        tree.console.push(error.toString());
         return error;
       } else {
         return result;
