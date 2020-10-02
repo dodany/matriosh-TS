@@ -5,7 +5,7 @@ import { ExceptionST } from '../../st/ExceptionST';
 import { types } from 'src/st/Type';
 import { ContinueNode } from '../Expresiones/ContinueNode';
 import { BreakNode } from '../Expresiones/BreakNode';
-import { runInThisContext } from 'vm';
+import { TypeError, typesError } from '../../st/TypeError';
 
 export class WhileNode extends Node {
   condition: Node;
@@ -32,14 +32,13 @@ export class WhileNode extends Node {
         return result;
       }
       if (this.condition.type.type !== types.BOOLEAN) {
-        const error = new ExceptionST(
-          'Semantico',
-          `Se esperaba una expresion booleana para la condicion`,
-          this.line,
-          this.column
-        );
+
+        const error = new ExceptionST(  typesError.SEMANTICO,
+          `Se esperaba una expresion booleana para la condicion`  + ",",
+           "[" + this.line +"," + this.column + "]");
+
         tree.excepciones.push(error);
-        tree.console.push(error.toString());
+        //tree.console.push(error.toString());
         return error;
       }
       if (result) {

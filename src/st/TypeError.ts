@@ -1,8 +1,8 @@
 
 export enum typesError {
   SEMANTICO = '[ERROR - SEMÁNTICO] - ',
-  SINTACTICO = '[ERROR -Sintáctico] - ',
-  LEXICO = '[ERROR -Léxico] - '
+  SINTACTICO = '[ERROR -SINTÁCTICO] - ',
+  LEXICO = '[ERROR -LÉXICO] - '
 }
 
 export class TypeError {
