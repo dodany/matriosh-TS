@@ -19,7 +19,7 @@ install:
   - npm install
   tags:
     #TAGS DEL runner
-  - docker,ayd2
+    - docker,compi2
   artifacts:
       #Este es el artefacto que voy a entregar
       paths:
