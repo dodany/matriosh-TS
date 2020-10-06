@@ -1,0 +1,71 @@
+cache:
+  key: "$CI_COMMIT_REF_NAME node:latest"
+  paths:
+  - node_modules/
+
+image: node:latest
+
+stages:
+- install
+- release
+- deploy
+
+install:
+  stage: install
+  image: node:latest
+  before_script:
+     - apk add --update git && rm -rf /tmp/* /var/cache/apk/*
+  script:
+  - npm install
+  tags:
+    #TAGS DEL runner
+  - docker,ayd2
+  artifacts:
+      #Este es el artefacto que voy a entregar
+      paths:
+        - node_modules/
+  cache:
+      #Cache por si hago varios commits
+      paths:
+        - node_modules/
+ # only:
+  #    - tags
+
+
+
+release:
+  stage: release
+  image: docker:latest
+  only:
+      - "master"
+  tags:
+    - docker,compi2
+  variables:
+      DOCKER_REGISTRY: "docker.io"
+      DOCKER_TLS_CERTDIR: "/certs"
+  script:
+      - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_KEY}
+      - docker build -t "dockersaselenium/matriosh:latest"  .
+      - docker push "dockersaselenium/matriosh:latest"
+  after_script:
+      - docker logout
+
+deploy:
+  stage: deploy
+  only:
+      - "master"
+  image: docker:latest
+  environment:
+      name: production
+      url: http://104.197.92.13/
+  tags:
+      - docker,compi2
+  #*before_script:
+  #    - docker stop matriosh
+  #    - docker rm matriosh
+  script:
+      - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_KEY}
+      - docker pull "dockersaselenium/matriosh:latest"
+      - docker run -d -p 0.0.0.0:80:4200 --name=matriosh dockersaselenium/matriosh:latest
+  after_script:
+      - docker logout
