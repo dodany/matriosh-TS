@@ -1,7 +1,6 @@
 function generateTree(treeData) {
 
   let size = getTreeLength(treeData[0]);
-  console.log(size);
   // ************** Generate the tree diagram	 *****************
   var margin = { top: 20, right: 00, bottom: 20, left: 0 },
       width = 55 * size - margin.right - margin.left,

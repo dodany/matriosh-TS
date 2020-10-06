@@ -3,7 +3,7 @@ import { Table } from '../../st/Table';
 import { ExceptionST } from '../../st/ExceptionST';
 import { typesError, TypeError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
-import { BreakNode} from '../../nodes/Expresiones/BreakNode';
+import { BreakNode } from '../../nodes/Expresiones/BreakNode';
 import { ErrorNode } from 'src/nodes/Instrucciones/ErrorNode';
 
 declare const arith_arbol: any;
@@ -15,7 +15,6 @@ const grammar = require('../../parser/grammar.js');
   templateUrl: './interfaz.component.html',
   styleUrls: ['./interfaz.component.css'],
 })
-
 export class InterfazComponent implements OnInit {
   txtIn: string;
   txtOut: string;
@@ -26,25 +25,19 @@ export class InterfazComponent implements OnInit {
   chkError: boolean;
   txtoi: String;
 
-  constructor(
-    //private _dataSvc:DataService
-    ) {
+  constructor() { //private _dataSvc:DataService
     this.chkTree = true;
     this.chkConsola = true;
     this.chkError = true;
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 
   /**
    *
    * EJECUTAR
    */
   onEjecutar() {
-
-
     const result = arith_arbol.parse(this.txtIn);
     this.txtOut = result.val.toString();
 
@@ -56,44 +49,46 @@ export class InterfazComponent implements OnInit {
       generateTree([result.node]);
     } else {
       (<HTMLInputElement>document.getElementById('grafo')).remove();
-     // (<HTMLInputElement>document.getElementById('tree')).hidden=true;
+      // (<HTMLInputElement>document.getElementById('tree')).hidden=true;
     }
   }
 
-  OnEjecutarTs () {
+  OnEjecutarTs() {
 
     const tree_ant = grammar.parse(this.txtIn);
-    const tree= tree_ant.val;
-    const tabla = new Table (null);
+    const tree = tree_ant.val;
+
+    const tabla = new Table(null);
 
     tree.instructions.map((m: any) => {
-      const res = m.execute(tabla, tree);
+       const res = m.execute(tabla, tree);
 
+      //IMPRIME TODOS LOS NODOS
       console.log(m);
 
       if (res instanceof BreakNode) {
-
-          const error = new ExceptionST(  typesError.SEMANTICO,
-            `Sentencia break fuera de un ciclo` +",",
-            "[" + res.line +"," + res.column + "]");
-
+        const error = new ExceptionST(
+          typesError.SEMANTICO,
+          `Sentencia break fuera de un ciclo` + ',',
+          '[' + res.line + ',' + res.column + ']'
+        );
         tree.excepciones.push(error);
-        //tree.console.push(error.toString());
-
       } else if (res instanceof ContinueNode) {
-
-        const error = new ExceptionST(  typesError.SEMANTICO,
-          `Sentencia continue fuera de un ciclo` +",",
-          "[" + res.line +"," + res.column + "]");
-
+        const error = new ExceptionST(
+          typesError.SEMANTICO,
+          `Sentencia continue fuera de un ciclo` + ',',
+          '[' + res.line + ',' + res.column + ']'
+        );
         tree.excepciones.push(error);
-
       }
-
-      this.txtErrores= tree.excepciones.toString();
-      this.txtOut = tree.console.toString();
-
     });
+
+
+    this.txtOut = tree.console.join('\n');
+    //ERRORES
+    this.txtErrores = tree.excepciones.join('\n');
+    //PILA
+    this.txtPila = tree.pila.join('\n');
 
     if (this.chkTree) {
       if (<HTMLInputElement>document.getElementById('grafo')) {
@@ -103,7 +98,6 @@ export class InterfazComponent implements OnInit {
     } else {
       (<HTMLInputElement>document.getElementById('grafo')).remove();
     }
-
   }
 
   /**
@@ -128,12 +122,11 @@ export class InterfazComponent implements OnInit {
     this.txtOut = '';
   }
 
-
-  onCleanError(){
-    this.txtErrores='';
+  onCleanError() {
+    this.txtErrores = '';
   }
 
-  onCleanPila(){
-    this.txtPila='';
+  onCleanPila() {
+    this.txtPila = '';
   }
 }

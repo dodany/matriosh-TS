@@ -2,7 +2,7 @@ import { Node } from '../Node';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { ExceptionST } from '../../st/ExceptionST';
-import { Symbol } from '../../st/Symbol';
+//import { Symbol } from '../../st/Symbol';
 import { types } from 'src/st/Type';
 import { ContinueNode } from '../Expresiones/ContinueNode';
 import { BreakNode } from '../Expresiones/BreakNode';
@@ -13,13 +13,7 @@ export class IfNode extends Node {
   ifList: Array<Node>;
   elseList: Array<Node>;
 
-  constructor(
-    condition: Node,
-    ifList: Array<Node>,
-    elseList: Array<Node>,
-    line: Number,
-    column: Number
-  ) {
+  constructor(condition: Node,ifList: Array<Node>,elseList: Array<Node>,line: Number,column: Number) {
     super(null, line, column);
     this.condition = condition;
     this.ifList = ifList;

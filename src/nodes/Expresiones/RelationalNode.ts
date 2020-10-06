@@ -56,9 +56,7 @@ export class RelationalNode extends Node {
           const error = new ExceptionST(  typesError.SEMANTICO,
             'Operador desconocido'+"," ,
             "[" + this.line +"," + this.column + "]");
-
           tree.excepciones.push(error);
-          //tree.console.push(error.toString());
           return error;
       }
     } else {
@@ -67,7 +65,6 @@ export class RelationalNode extends Node {
         `Problema con los tipos que esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`+",",
         "[" + this.line +"," + this.column + "]");
       tree.excepciones.push(error);
-      //tree.console.push(error.toString());
       return error;
     }
   }

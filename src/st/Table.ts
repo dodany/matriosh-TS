@@ -17,7 +17,7 @@ export class Table{
 
     /**
      *
-     * @method setVariable Almacena una variable, si ya existe arroja error
+     * @method setVariable Almacena una variable,  verifica si existe
      * @param simbol Simbolo que contiene la informacion de la variable a almacenar
      */
     setVariable(symbol: Symbol){
@@ -43,12 +43,29 @@ export class Table{
         let env: Table;
         for(env = this; env != null; env = env.Previous){
             for(let key of Array.from( env.Variables.keys()) ) {
+
                 if(key === identifier){
+                  let a = env.Variables.get(key);
                     return env.Variables.get(key);
                 }
             }
         }
         return null;
+    }
+
+    //Método para listar los Simbolos
+    getSymbol():Symbol {
+      let env: Table;
+      env =this;
+
+      console.log( "getSymbol --------------->");
+      console.log ( env);
+      console.log( Array.from( env.Variables.keys()));
+
+        return null;
+
+
+
     }
 
 }

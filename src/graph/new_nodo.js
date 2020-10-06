@@ -7,9 +7,6 @@ function parseExample() {
   }
   var result = ejemplo1.parse(content);
   document.getElementById("salida").value = result.val;
-
- console.log("esto es result.node");
- console.log([result.node]);
   generateTree([result.node]);
 
 }

@@ -26,10 +26,8 @@ export class ReturnNode extends Node {
           'Este valor No se puede retornar' +",",
           "[" + this.line +"," + this.column + "]");
         tree.excepciones.push(error);
-
-        tree.excepciones.push(error);
-//        tree.console.push(error.toString());
         return error;
+
       } else {
         return result;
       }

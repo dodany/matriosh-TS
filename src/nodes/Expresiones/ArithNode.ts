@@ -29,132 +29,145 @@ export class ArithNode extends Node {
       return lResult;
     }
 
-    if (this.arg2 !== null) {
-      //VIENEN AMBOS NODOS
-      const rResult = this.arg2.execute(table, tree);
-      if (rResult instanceof ExceptionST) {
-        return rResult;
-      }
 
-      if (
-        this.arg1.type.type === types.NUMBER &&
-        this.arg2.type.type === types.NUMBER
-      ) {
-        this.type = new Type(types.NUMBER);
-        switch (this.op) {
-          case '+':
-            return lResult + rResult;
-            break;
-          case '-':
-            return lResult - rResult;
-            break;
-          case '*':
-            return lResult * rResult;
-            break;
-          case '/':
-            if (rResult === 0) {
+    if (this.arg1 !== null) {
+      if (this.arg2 !== null) {
+        //VIENEN AMBOS NODOS
+        const rResult = this.arg2.execute(table, tree);
+        if (rResult instanceof ExceptionST) {
+          return rResult;
+        }
 
-              const error = new ExceptionST(  typesError.SEMANTICO,
-                "La difición con cero no es permitida,",
-                "[" + this.line +"," + this.column + "]");
+        if (
+          this.arg1.type.type === types.NUMBER &&
+          this.arg2.type.type === types.NUMBER
+        ) {
+          this.type = new Type(types.NUMBER);
+          switch (this.op) {
+            case '+':
+              return lResult + rResult;
+              break;
+            case '-':
+              return lResult - rResult;
+              break;
+            case '*':
+              return lResult * rResult;
+              break;
+            case '/':
+              if (rResult === 0) {
+                const error = new ExceptionST(
+                  typesError.SEMANTICO,
+                  'La difición con cero no es permitida,',
+                  '[' + this.line + ',' + this.column + ']'
+                );
+
+                tree.excepciones.push(error);
+
+                return null;
+              } else {
+                return lResult / rResult;
+              }
+              break;
+            case '%':
+              return lResult % rResult;
+              break;
+            case '**':
+              return lResult ** rResult;
+              break;
+            default:
+              const error = new ExceptionST(
+                typesError.SEMANTICO,
+                'Operador desconocido, ',
+                '[' + this.line + ',' + this.column + ']'
+              );
 
               tree.excepciones.push(error);
+              return null;
+              break;
+          }
+        } else if (
+          this.arg1.type.type === types.STRING &&
+          this.arg2.type.type === types.STRING
+        ) {
+          this.type = new Type(types.STRING);
+          switch (this.op) {
+            case '+':
+              return lResult + rResult;
+              break;
+            default:
+              const error = new ExceptionST(
+                typesError.SEMANTICO,
+                'Operador desconocido, ',
+                '[' + this.line + ',' + this.column + ']'
+              );
 
-              return error;
-            } else {
-              return lResult / rResult;
-            }
-            break;
-          case '%':
-            return lResult % rResult;
-            break;
-          case '**':
-            return lResult ** rResult;
-            break;
-          default:
-            const error = new ExceptionST(  typesError.SEMANTICO,
-              'Operador desconocido, ',
-              "[" + this.line +"," + this.column + "]");
+              tree.excepciones.push(error);
+              return null;
+              break;
+          }
+        } else if (
+          this.arg1.type.type === types.ARRAY &&
+          this.arg2.type.type === types.ARRAY
+        ) {
+          //ARRAYS
 
-            tree.excepciones.push(error);
-            //tree.console.push(error.toString());
-            return error;
-            break;
-        }
-      } else if (
-        this.arg1.type.type === types.STRING &&
-        this.arg2.type.type === types.STRING
-      ) {
-        this.type = new Type(types.STRING);
-        switch (this.op) {
-          case '+':
-            return lResult + rResult;
-            break;
-          default:
-          const error = new ExceptionST(  typesError.SEMANTICO,
-            'Operador desconocido, ',
-            "[" + this.line +"," + this.column + "]");
+          return null;
+        } else {
+          const error = new ExceptionST(
+            typesError.SEMANTICO,
+            `No se pueden operar ` +
+              this.arg1.type.toString() +
+              ` y ` +
+              ` ${this.arg2.type.toString()}` +
+              ' - ',
+            '[' + this.line + ',' + this.column + ']'
+          );
 
-            tree.excepciones.push(error);
-           // tree.console.push(error.toString());
-            return error;
-            break;
-        }
-      } else if (
-        this.arg1.type.type === types.ARRAY &&
-        this.arg2.type.type === types.ARRAY
-      ) {
-        //ARRAYS
+          tree.excepciones.push(error);
 
-        return null;
-      } else {
-
-        console.log("error de tipos ");
-        const error = new ExceptionST(  typesError.SEMANTICO,
-          `No se pueden operar ` + this.arg1.type.toString() + ` y `  + ` ${this.arg2.type.toString()}` +" - ",
-          "[" + this.line +"," + this.column + "]");
-
-        tree.excepciones.push(error);
-        //tree.console.push(error.toString());
-        return error;
-      }
-    } else {
-      // SOLO VIENE EL NODO IZQUIERDO
-
-      if (this.arg1.type.type === types.NUMBER) {
-        this.type = new Type(types.NUMBER);
-        switch (this.op) {
-          case '++':
-            return lResult + 1;
-            break;
-          case '--':
-            return lResult - 1;
-            break;
-          case '-':
-            return lResult * -1;
-            break;
-          default:
-
-          const error = new ExceptionST(  typesError.SEMANTICO,
-              'Operador desconocido, ',
-              "[" + this.line +"," + this.column + "]");
-
-            tree.excepciones.push(error);
-           // tree.console.push(error.toString());
-            return error;
-            break;
+          return null;
         }
       } else {
-        //NO ES NUMBER
+        // SOLO VIENE EL NODO IZQUIERDO
 
-        const error = new ExceptionST(  typesError.SEMANTICO,
-          `Un operando aritmético debe ser de tipo number'. ${this.arg1.type.type}` +",",
-          "[" + this.line +"," + this.column + "]");
+        if (this.arg1.type.type === types.NUMBER) {
+          this.type = new Type(types.NUMBER);
+          switch (this.op) {
+            case '++':
+              return lResult + 1;
+              break;
+            case '--':
+              return lResult - 1;
+              break;
+            case '-':
+              return lResult * -1;
+              break;
+            default:
+              const error = new ExceptionST(
+                typesError.SEMANTICO,
+                'Operador desconocido, ',
+                '[' + this.line + ',' + this.column + ']'
+              );
 
-        tree.excepciones.push(error);
-        //tree.console.push(error.toString());
-        return error;
+              tree.excepciones.push(error);
+              return null;
+              break;
+          }
+        } else {
+          //NO ES NUMBER
+          const error = new ExceptionST(
+            typesError.SEMANTICO,
+            `Un operando aritmético debe ser de tipo number'. ${this.arg1.type.type}` +
+              ',',
+            '[' + this.line + ',' + this.column + ']'
+          );
+
+          tree.excepciones.push(error);
+          return null;
+        }
       }
+    }else{
+      return null;
     }
   }
 }
