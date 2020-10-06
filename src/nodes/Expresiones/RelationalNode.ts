@@ -10,15 +10,9 @@ export class RelationalNode extends Node {
   arg2: Node;
   op: String;
 
-  constructor(
-    arg1: Node,
-    arg2: Node,
-    op: String,
-    line: Number,
-    column: Number
-  ) {
+  constructor(arg1: Node, arg2: Node,op: String,line: Number,column: Number) {
     super(new Type(types.BOOLEAN), line, column);
-    this.arg1 = arg2;
+    this.arg1 = arg1;
     this.arg2 = arg2;
     this.op = op;
   }
@@ -57,7 +51,7 @@ export class RelationalNode extends Node {
             'Operador desconocido'+"," ,
             "[" + this.line +"," + this.column + "]");
           tree.excepciones.push(error);
-          return error;
+          return null;
       }
     } else {
 
@@ -65,7 +59,7 @@ export class RelationalNode extends Node {
         `Problema con los tipos que esta tratando de operar ${this.arg1.type.type} y ${this.arg2.type.type}`+",",
         "[" + this.line +"," + this.column + "]");
       tree.excepciones.push(error);
-      return error;
+      return null;
     }
   }
 }

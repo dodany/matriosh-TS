@@ -20,9 +20,7 @@ export class CallNode extends Node {
     let var_: Symbol;
     const newTable = new Table(table);
     var_ = table.getVariable(this.id);
-    console.log("var_ ------------->");
-    console.log(var_);
-    console.log(this.id);
+
     if (var_ == null) {
       const error = new ExceptionST(
         typesError.SEMANTICO,
@@ -43,7 +41,6 @@ export class CallNode extends Node {
         return null;
       } else {
         //EJECUTAR
-          console.log("ejecutar");
         for (let i = 0; i < var_.instList.length; i++) {
           const res = var_.instList[i].execute(newTable, tree);
           if (res instanceof ContinueNode || res instanceof BreakNode) {

@@ -53,19 +53,6 @@ export class Table{
         return null;
     }
 
-    //Método para listar los Simbolos
-    getSymbol():Symbol {
-      let env: Table;
-      env =this;
 
-      console.log( "getSymbol --------------->");
-      console.log ( env);
-      console.log( Array.from( env.Variables.keys()));
-
-        return null;
-
-
-
-    }
 
 }

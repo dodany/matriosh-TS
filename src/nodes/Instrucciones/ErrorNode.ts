@@ -1,7 +1,7 @@
 import { Node } from '../Node';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
-import { types, Type } from 'src/st/Type';
+import { types, Type } from '../../st/Type';
 import { ExceptionST } from '../../st/ExceptionST';
 
 export class ErrorNode extends Node {

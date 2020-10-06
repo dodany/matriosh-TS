@@ -11,12 +11,7 @@ export class WhileNode extends Node {
   condition: Node;
   list: Array<Node>;
 
-  constructor(
-    condition: Node,
-    list: Array<Node>,
-    line: Number,
-    column: Number
-  ) {
+  constructor(condition: Node,list: Array<Node>,line: Number,column: Number ) {
     super(null, line, column);
     this.condition = condition;
     this.list = list;
@@ -26,22 +21,30 @@ export class WhileNode extends Node {
     const newTable = new Table(table);
     let result: Node;
 
+
     do {
       result = this.condition.execute(newTable, tree);
+      console.log( this.condition);
       if (result instanceof ExceptionST) {
         return result;
       }
+
       if (this.condition.type.type !== types.BOOLEAN) {
 
         const error = new ExceptionST(  typesError.SEMANTICO,
-          `Se esperaba una expresion booleana para la condicion`  + ",",
+          `Debe ser una expresion booleana para la condición`  + ",",
            "[" + this.line +"," + this.column + "]");
 
         tree.excepciones.push(error);
-        return error;
+        return null;
       }
+
+      console.log("llegosdfsdf acá");
+      console.log(result);
+
       if (result) {
         for (let i = 0; i < this.list.length; i++) {
+
           const res = this.list[i].execute(newTable, tree);
           if (res instanceof ContinueNode) {
             break;

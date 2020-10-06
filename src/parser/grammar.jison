@@ -21,7 +21,8 @@
     const {GraphNode}  = require('../nodes/Instrucciones/GraphNode');
     const {FunctionNode} = require('../nodes/Instrucciones/FunctionNode');
     const {CallNode} = require('../nodes/Instrucciones/CallNode');
-
+    const {TernarioNode} = require('../nodes/Instrucciones/TernarioNode');
+    const {ForNode} = require('../nodes/Instrucciones/ForNode');
 
     let count = 0;
 function newTemp() {
@@ -116,7 +117,7 @@ number [0-9]+("."[0-9]+)?\b
 %left '&&'
 %left '==', '!='
 %left '>=', '<=', '<', '>'
-%left '+' '-'
+%left  '+', '-'
 %left '*', '/', '%', '**'
 %left '++', '--'
 %right '!'
@@ -148,10 +149,18 @@ INSTRUCCION : FUNCTION          {$$ = { val:$1.val,
                                        node: newNode(yy, yystate, $1.node)  }}
             | IF                {$$ = { val:$1.val,
                                        node: newNode(yy, yystate, $1.node)  }}
+            | TERNARIO          {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
             | WHILE             {$$ = { val:$1.val,
                                        node: newNode(yy, yystate, $1.node)  }}
+            | DO                {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
+                                       /*
+            | FOR               {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)
+                                       console.log("FOR"); }} */
             | SWITCH            {$$ = { val:$1.val,
-                                       node: newNode(yy, yystate, $1.node)  }}               }
+                                       node: newNode(yy, yystate, $1.node)  }}
             | DECLARACION       {$$ = { val:$1.val,
                                        node: newNode(yy, yystate, $1.node)  }}
             | ASIGNACION        {$$ = { val:$1.val,
@@ -188,6 +197,7 @@ DECLARACION : 'TIPOF' identifier '=' EXP ';'          {$$ = { val: new DeclareNo
 
 ASIGNACION : identifier '=' EXP ';' {$$ = { val: new AsigNode($1, $3.val, this._$.first_line, this._$.first_column),
                                            node: newNode(yy, yystate, $1, $2, $3.node) }}
+
            ;
 
 TIPOF : 'let'  {$$ ={ val: false,
@@ -222,6 +232,7 @@ IF : 'if' CONDICION BLOQUE_INSTRUCCIONES                              {$$ = { va
                                                                                             node: newNode(yy, yystate, $1, $2.node, $4.node,$6,$8.node)  }}
    ;
 
+
 //SWITCH
 SWITCH : 'switch' CONDICION '{' CASELIST '}'
       ;
@@ -233,9 +244,20 @@ CASELIST : CASELIST CASE
 CASE : 'case' CONDICION ':'
       ;
 
-WHILE : 'while' CONDICION BLOQUE_INSTRUCCIONES {$$ = new WhileNode($2, $3, this._$.first_line, this._$.first_column); }
+WHILE : 'while' CONDICION BLOQUE_INSTRUCCIONES {$$ = { val: new WhileNode($2.val, $3.val, this._$.first_line, this._$.first_column),
+                                               node: newNode(yy, yystate, $1, $2.node, $3.node)        }}
       ;
 
+DO :  'do' BLOQUE_INSTRUCCIONES 'while' CONDICION ';' {$$ = { val: new WhileNode($4.val, $2.val, this._$.first_line, this._$.first_column),
+                                                         node: newNode(yy, yystate, $1, $2.node, $4.node)        }}
+      ;
+/*
+FOR : 'for' '(' 'let' identifier '=' EXP ';'  EXP ';' EXP ')' '{' BLOQUE_INSTRUCCIONES '}'
+        {$$ = {val: new ForNode (  $4, $5.node, $7.node, $9.node ,  this._$.first_line, this._$.first_column ) ,
+             node: newNode(yy, yystate, $4, $5.node, $7.node,$9.node)};
+             console.log("forrrrrrrrrrrrrrrrrrrrr");  }
+    ;
+*/
 BLOQUE_INSTRUCCIONES : '{' INSTRUCCIONES '}' {$$ = { val: $2.val,
                                                    node:$2.node }}
                      | '{' '}'               {$$ = { val:[],
@@ -244,14 +266,14 @@ BLOQUE_INSTRUCCIONES : '{' INSTRUCCIONES '}' {$$ = { val: $2.val,
 
 
 CONDICION : '(' EXP ')' {$$ = { val: $2.val ,
-                                node: newNode(yy, yystate, $1, $2.node) }} //DUDA
+                                node: newNode(yy, yystate, $2.node) }}
                     ;
 
 EXP : '-' EXP %prec UMENOS  { $$ = { val: new ArithNode($1.val, null, '-', this._$.first_line, this._$.first_column),
                                    node: newNode(yy, yystate, $1.node)}                                  }
 
           | EXP '+' EXP     { $$ = { val: new ArithNode($1.val, $3.val, '+', this._$.first_line, this._$.first_column),
-                                    node: newNode(yy, yystate, $1.node, $2, $3.node) }    ;}
+                                    node: newNode(yy, yystate, $1.node, $2, $3.node) }    }
 
           | EXP '-' EXP     { $$ = { val:  new ArithNode($1.val, $3.val, '-', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }                    }

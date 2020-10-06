@@ -38,13 +38,15 @@ export class ArithNode extends Node {
           return rResult;
         }
 
-        if (
-          this.arg1.type.type === types.NUMBER &&
-          this.arg2.type.type === types.NUMBER
-        ) {
+        console.log("arithNode");
+        console.log ( this.arg1.type.type);
+        console.log ( this.arg2.type.type);
+
+        if (this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.NUMBER) {
           this.type = new Type(types.NUMBER);
           switch (this.op) {
             case '+':
+              console.log("suma normal");
               return lResult + rResult;
               break;
             case '-':
@@ -85,10 +87,7 @@ export class ArithNode extends Node {
               return null;
               break;
           }
-        } else if (
-          this.arg1.type.type === types.STRING &&
-          this.arg2.type.type === types.STRING
-        ) {
+        } else if (this.arg1.type.type === types.STRING && this.arg2.type.type === types.STRING ) {
           this.type = new Type(types.STRING);
           switch (this.op) {
             case '+':
@@ -105,14 +104,19 @@ export class ArithNode extends Node {
               return null;
               break;
           }
-        } else if (
-          this.arg1.type.type === types.ARRAY &&
-          this.arg2.type.type === types.ARRAY
-        ) {
+        } else if (this.arg1.type.type === types.ARRAY && this.arg2.type.type === types.ARRAY) {
           //ARRAYS
-
           return null;
-        } else {
+        } else if ((this.arg1.type.type === types.STRING && this.arg2.type.type === types.NUMBER)  ||
+        (this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.STRING))  {
+          this.type = new Type(types.STRING);
+          switch (this.op) {
+            case '+':
+              return lResult + rResult;
+              break;
+          }
+        }
+        else {
           const error = new ExceptionST(
             typesError.SEMANTICO,
             `No se pueden operar ` +
