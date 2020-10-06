@@ -39,7 +39,7 @@ release:
   only:
       - "master"
   tags:
-      - docker,ayd2
+    - docker,compi2
   variables:
       DOCKER_REGISTRY: "docker.io"
       DOCKER_TLS_CERTDIR: "/certs"
@@ -59,7 +59,7 @@ deploy:
       name: production
       url: http://104.197.92.13/
   tags:
-      - docker,ayd2
+      - docker,compi2
   #*before_script:
   #    - docker stop matriosh
   #    - docker rm matriosh
