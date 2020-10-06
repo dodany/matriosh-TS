@@ -6,32 +6,8 @@ cache:
 image: node:latest
 
 stages:
-- install
 - release
 - deploy
-
-install:
-  stage: install
-  image: node:latest
-  before_script:
-     - apk add --update git && rm -rf /tmp/* /var/cache/apk/*
-  script:
-  - npm install
-  tags:
-    #TAGS DEL runner
-    - docker,compi2
-  artifacts:
-      #Este es el artefacto que voy a entregar
-      paths:
-        - node_modules/
-  cache:
-      #Cache por si hago varios commits
-      paths:
-        - node_modules/
- # only:
-  #    - tags
-
-
 
 release:
   stage: release
@@ -39,7 +15,7 @@ release:
   only:
       - "master"
   tags:
-    - docker,compi2
+      - docker,compi2
   variables:
       DOCKER_REGISTRY: "docker.io"
       DOCKER_TLS_CERTDIR: "/certs"
