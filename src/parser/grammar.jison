@@ -11,15 +11,24 @@
     const {BreakNode} = require('../nodes/Expresiones/BreakNode');
     const {ReturnNode} = require('../nodes/Expresiones/ReturnNode');
     const {LogicNode} = require('../nodes/Expresiones/LogicNode');
-    const {idNode} = require('../nodes/Expresiones/idNode');
+    const {IdNode} = require('../nodes/Expresiones/IdNode');
     const {PrintNode} =  require('../nodes/Instrucciones/PrintNode');
     const {IfNode} = require('../nodes/Instrucciones/IfNode');
     const {WhileNode} = require('../nodes/Instrucciones/WhileNode');
     const {DeclareNode} = require('../nodes/Instrucciones/DeclareNode');
     const {AsigNode} = require('../nodes/Instrucciones/AsigNode');
     const {ErrorNode}  = require('../nodes/Instrucciones/ErrorNode');
+    const {GraphNode}  = require('../nodes/Instrucciones/GraphNode');
+    const {FunctionNode} = require('../nodes/Instrucciones/FunctionNode');
+    const {CallNode} = require('../nodes/Instrucciones/CallNode');
 
 
+    let count = 0;
+function newTemp() {
+    count++;
+return "t"+count;
+let cadena;
+}
 
 %}
 
@@ -33,6 +42,8 @@ number [0-9]+("."[0-9]+)?\b
 %%
 
 \s+                                 /* skip whitespace */
+"//".*										// comentario simple línea
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]			// comentario multiple líneas
 {number}             return 'number'
 "*"                   return '*'
 "/"                   return '/'
@@ -48,6 +59,7 @@ number [0-9]+("."[0-9]+)?\b
 "<="                  return '<='
 ">="                  return '>='
 "=="                  return '=='
+":"                   return ':'
 "!="                  return '!='
 "?"                   return '?'
 "||"                  return '||'
@@ -126,47 +138,86 @@ INSTRUCCIONES : INSTRUCCIONES INSTRUCCION { $$ = {val: $1.val,
                                                   node: newNode(yy, yystate, $1.node)} }
               ;
 
-INSTRUCCION : PRINT             {$$ = { val:$1.val,
-                                        node: newNode(yy, yystate, $1.node)  }}
-            | GRAPH             {$$ = $1;}
+INSTRUCCION : FUNCTION          {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
+            | CALLFUNCTION      {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
+            | PRINT             {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
+            | GRAPH             {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
             | IF                {$$ = { val:$1.val,
-                                         node: newNode(yy, yystate, $1.node) }}
-            | WHILE             {$$ = $1;}
-            | SWITCH            {$$ = $1;}
-            | DECLARACION       {$$ = $1;}
-            | ASIGNACION        {$$ = $1;}
-            | 'continue' ';'    {$$ = new ContinueNode(this._$.first_line, this._$.first_column)}
-            | 'break' ';'       {$$ = new BreakNode(this._$.first_line, this._$.first_column)}
-            | 'return' ';'      {$$ = new ReturnNode(null,this._$.first_line, this._$.first_column)}
-            | 'return' EXP ';'  {$$ = new ReturnNode($2,this._$.first_line, this._$.first_column)}
+                                       node: newNode(yy, yystate, $1.node)  }}
+            | WHILE             {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
+            | SWITCH            {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}               }
+            | DECLARACION       {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node)  }}
+            | ASIGNACION        {$$ = { val:$1.val,
+                                       node: newNode(yy, yystate, $1.node) }}
+            | 'continue' ';'    {$$ = { val: new ContinueNode(this._$.first_line, this._$.first_column),
+                                       node: newNode(yy, yystate, $1.node) }}
+            | 'break' ';'       {$$ = { val: new BreakNode(this._$.first_line, this._$.first_column),
+                                       node: newNode(yy, yystate, $1.node) }}
+            | 'return' ';'      {$$ = { val: new ReturnNode(null,this._$.first_line, this._$.first_column),
+                                       node: newNode(yy, yystate, $1.node) }}
+            | 'return' EXP ';'  {$$ = { val:new ReturnNode($2.val,this._$.first_line, this._$.first_column),
+                                       node: newNode(yy, yystate, $1.node) }}
             | error             {$$ ={ val: new ErrorNode( new ExceptionST(  typesError.SINTACTICO,
                                           "Instrucción no reconocida "+ $1 	+ " - " ,
                                       "[" + this._$.first_line +"," + this._$.first_column + "]")),
                                        node: newNode(yy, yystate, [])   } }
             ;
 
+FUNCTION :  'function' identifier '(' ')' '{'  INSTRUCCIONES   '}' {$$ = { val: new FunctionNode (new Type(types.VOID),$2, $6.val,this._$.first_line, this._$.first_column),
+                                                  node: newNode(yy, yystate, $1,$2,$6.node )  }}
+         ;
 
-DECLARACION : 'TIPO' identifier '=' EXP ';' {$$ = new DeclareNode($1, $2, $4, this._$.first_line, this._$.first_column);}
+CALLFUNCTION: identifier '(' ')' ';'  {  $$ ={ val: new CallNode($1, this._$.first_line, this._$.first_column),
+                                              node: newNode(yy, yystate, $1)  }}
             ;
 
-ASIGNACION : identifier '=' EXP ';' {$$ = new AsigNode($1, $3, this._$.first_line, this._$.first_column);}
+DECLARACION : 'TIPOF' identifier '=' EXP ';'          {$$ = { val: new DeclareNode($4.val.type, $2, $4.val,
+                                                        this._$.first_line, this._$.first_column,$1.val),
+                                                             node: newNode(yy, yystate, $2, $4.node)  }}
+            | 'TIPOF' identifier ':' TIPO '=' EXP ';' {$$ = { val: new DeclareNode($4.val, $2, $6.val,
+                                                        this._$.first_line, this._$.first_column, $1.val),
+                                                             node: newNode(yy, yystate, $2, $6.node)  }}
+            ;
+
+ASIGNACION : identifier '=' EXP ';' {$$ = { val: new AsigNode($1, $3.val, this._$.first_line, this._$.first_column),
+                                           node: newNode(yy, yystate, $1, $2, $3.node) }}
            ;
 
-TIPO : 'let' {$$ = new Type(types.NUMBER);}
-     | 'const' {$$ = new Type(types.STRING);}
+TIPOF : 'let'  {$$ ={ val: false,
+                     node: newNode(yy, yystate, $1)  }}
+      | 'const' {$$ ={ val: true,
+                     node: newNode(yy, yystate, $1)  }}
      ;
 
-PRINT : 'console.log' '(' EXP ')' ';' { $$ = { val:new PrintNode($3.val, this._$.first_line, this._$.first_column),
-                                               node: newNode(yy, yystate, $3.node)}                               }
+TIPO : 'number'  {$$ = { val: new Type(types.NUMBER),
+                        node: newNode(yy, yystate, $1) }}
+     | 'string'  {$$ = { val: new Type(types.STRING),
+                        node: newNode(yy, yystate, $1) }}
+     | 'boolean' {$$ = { val:new Type(types.BOOLEAN),
+                        node: newNode(yy, yystate, $1) }}
+     | 'types'   {$$ = { val:new TYPE(types.TYPE),
+                        node: newNode(yy, yystate, $1) }}
+     ;
+
+PRINT : 'console.log' '(' EXP ')' ';' { $$ = { val: new PrintNode($3.val, this._$.first_line, this._$.first_column),
+                                              node: newNode(yy, yystate, $3.node)                                   }}
       ;
 
-GRAPH : 'graficar_ts' '('  ')' ';' { $$ = new GraphNode($3, this._$.first_line, this._$.first_column);}
+GRAPH : 'graficar_ts' '('  ')' ';' { $$ = { val: new GraphNode(this._$.first_line, this._$.first_column),
+                                              node: newNode(yy, yystate, $1)                                           }}
       ;
 
 IF : 'if' CONDICION BLOQUE_INSTRUCCIONES                              {$$ = { val: new IfNode($2.val, $3.val, [], this._$.first_line, this._$.first_column),
                                                                                             node: newNode(yy, yystate, $1, $2.node, $3.node)             }}
    | 'if' CONDICION BLOQUE_INSTRUCCIONES 'else' BLOQUE_INSTRUCCIONES  {$$ = { val: new IfNode($2.val, $3.val, $5.val, this._$.first_line, this._$.first_column),
-                                                                                            node: newNode(yy, yystate, $1, $2.node, $3.node,$4,$5.node)  }}
+                                                                                            node: newNode(yy, yystate, $1, $2.node, $3.node,$4, $5.node)             }}
    | 'if' CONDICION BLOQUE_INSTRUCCIONES 'else' IF                    {$$ = { val: new IfNode($2.val, $4.val, [$5].val, this._$.first_line, this._$.first_column),
                                                                                             node: newNode(yy, yystate, $1, $2.node, $4.node,$6,$8.node)  }}
    ;
@@ -232,7 +283,7 @@ EXP : '-' EXP %prec UMENOS  { $$ = { val: new ArithNode($1.val, null, '-', this.
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }              }
           | EXP '&&' EXP    { $$ = { val: new LogicNode($1.val, $3.val, '||', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1.node, $2, $3.node) }              }
-          | '!' EXP         { $$ = { val: new LogicNode($2, null, '!', this._$.first_line, this._$.first_column),
+          | '!' EXP         { $$ = { val: new LogicNode($2.val, null, '!', this._$.first_line, this._$.first_column),
                                     node: newNode(yy, yystate, $1, $2.node)    }              } //DUDA
 
           | 'number'        { $$ = { val: new ValueNode(new Type(types.NUMBER), Number($1), this._$.first_line, this._$.first_column),
@@ -247,7 +298,7 @@ EXP : '-' EXP %prec UMENOS  { $$ = { val: new ArithNode($1.val, null, '-', this.
                                     node: newNode(yy, yystate, $1)} }
 
           | identifier      { $$ = { val: new IdNode($1, this._$.first_line, this._$.first_column),
-                                    node: newNode(yy, yystate, $1)} }
+                                    node: newNode(yy, yystate, $1)    }}
           | '(' EXP ')'     { $$ = { val:$2.val,
-                                    node: newNode(yy, yystate, $2.node)} }
+                                    node: newNode(yy, yystate, $2.node)   }}
           ;

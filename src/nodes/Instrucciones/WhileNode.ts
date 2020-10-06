@@ -38,7 +38,6 @@ export class WhileNode extends Node {
            "[" + this.line +"," + this.column + "]");
 
         tree.excepciones.push(error);
-        //tree.console.push(error.toString());
         return error;
       }
       if (result) {

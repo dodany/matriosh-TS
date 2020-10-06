@@ -20,29 +20,37 @@ export class AsigNode extends Node {
     if (result instanceof ExceptionST) {
       return result;
     }
-
     let var_: Symbol;
-    var_: table.getVariable(this.id);
-
+    var_ = table.getVariable(this.id);
     if (var_ == null) {
-
-      const error = new ExceptionST(  typesError.SEMANTICO,
-        'No se ha encontrado la variable ' + this.id +",",
-        "[" + this.line +"," + this.column + "]");
+      const error = new ExceptionST(
+        typesError.SEMANTICO,
+        'No se ha encontrado la variable ' + this.id + ',',
+        '[' + this.line + ',' + this.column + ']'
+      );
 
       tree.excepciones.push(error);
-      return error;
+      return null;
+    } else {
+      if (var_.const_) {
+        const error = new ExceptionST(
+          typesError.SEMANTICO,
+          this.id + ' -> es constante no se puede modificar',
+          '[' + this.line + ',' + this.column + ']'
+        );
+        tree.excepciones.push(error);
+        return null;
+      } else if (this.value.type.type != var_.type.type) {
+        const error = new ExceptionST(
+          typesError.SEMANTICO,
+          `No se puede asignar la variable porque los tipos no coinciden.` +
+            ',',
+          '[' + this.line + ',' + this.column + ']'
+        );
+        tree.excepciones.push(error);
+        return null;
+      }
     }
-
-    if (this.value.type.type != var_.type.type) {
-
-      const error = new ExceptionST(  typesError.SEMANTICO,
-        `No se puede asignar la variable porque los tipos no coinciden.` +",",
-        "[" + this.line +"," + this.column + "]");
-      tree.excepciones.push(error);
-      return error;
-    }
-
     var_.value = result;
   }
 }

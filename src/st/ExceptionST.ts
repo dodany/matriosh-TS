@@ -19,8 +19,7 @@ export class ExceptionST {
     this.position = position;
   }
 
-
-  toString(){
-    return  this.type + " " + this.description + " " + this.position + "\n";
-}
+  toString() {
+    return this.type + ' ' + this.description + ' ' + this.position;
+  }
 }
