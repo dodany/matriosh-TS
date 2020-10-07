@@ -24,6 +24,7 @@
     "module": "commonjs",
     "allowJs": true,
     "fullTemplateTypeCheck": true,
+    "enableIvy": true,
     "strictInjectionParameters": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports":true,
