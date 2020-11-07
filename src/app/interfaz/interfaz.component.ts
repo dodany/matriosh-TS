@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, OnChanges, AfterViewInit } from '@angular/core';
 import { Table } from '../../st/Table';
 import { ExceptionST } from '../../st/ExceptionST';
-import { typesError, TypeError } from '../../st/TypeError';
+import { typesError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode } from '../../nodes/Expresiones/BreakNode';
-import { ErrorNode } from 'src/nodes/Instrucciones/ErrorNode';
+import CodeMirror from 'codemirror';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
@@ -15,6 +15,7 @@ const grammar = require('../../parser/grammar.js');
   templateUrl: './interfaz.component.html',
   styleUrls: ['./interfaz.component.css'],
 })
+
 export class InterfazComponent implements OnInit {
   txtIn: string;
   txtOut: string;
@@ -24,20 +25,28 @@ export class InterfazComponent implements OnInit {
   chkConsola: boolean;
   chkError: boolean;
   txtoi: String;
+  //
+  editor:any;
+  editorNativeElement:any;
+  height:number;
 
-  constructor() { //private _dataSvc:DataService
+  constructor( elRef:ElementRef) { //private _dataSvc:DataService
     this.chkTree = true;
     this.chkConsola = true;
     this.chkError = true;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
   /**
    *
    * EJECUTAR
    */
   onEjecutar() {
+
+
     const result = arith_arbol.parse(this.txtIn);
     this.txtOut = result.val.toString();
 

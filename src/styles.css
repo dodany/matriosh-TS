@@ -22,3 +22,8 @@
   stroke: black;
   stroke-width: 1px;
 }
+
+.CodeMirror {
+  height: 510px;
+  width: 630px;
+}
