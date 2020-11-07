@@ -46,6 +46,7 @@ number [0-9]+("."[0-9]+)?\b
 "//".*										// comentario simple línea
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]			// comentario multiple líneas
 {number}             return 'number'
+"**"                  return '**'
 "*"                   return '*'
 "/"                   return '/'
 ";"                   return ';'
@@ -54,7 +55,6 @@ number [0-9]+("."[0-9]+)?\b
 "++"                  return '++'
 "--"                  return '--'
 "%"                   return '%'
-"**"                  return '**'
 "<"                   return '<'
 ">"                   return '>'
 "<="                  return '<='
