@@ -16,6 +16,12 @@ export class CallNode extends Node {
 
   }
 
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
+
   execute(table: Table, tree: Tree) {
     let var_: Symbol;
     const newTable = new Table(table);

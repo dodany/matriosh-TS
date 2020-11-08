@@ -22,12 +22,12 @@
       <button mat-raised-button (click)="onCleanIn()">LImpiar</button>
       <button mat-raised-button (click)="onEjecutar()">Traducir</button>
       <button mat-raised-button (click)="OnEjecutarTs()">Ejecutar</button>
-      <button mat-raised-button (click)="OnEjecutarTs()">Traducir C3D</button>
+      <button mat-raised-button (click)="OnEjecutar3D()">Traducir C3D</button>
     </div>
 
     <div class="example-button-row">
       <mat-checkbox class="example-margin" [(ngModel)]="chkTree">Árbol</mat-checkbox>
-      <mat-checkbox class="example-margin" [(ngModel)]="chkConsola">Consola</mat-checkbox>
+      <button mat-raised-button (click)="OnEjecutarTs()">Ver AST</button>
     </div>
   </div>
 

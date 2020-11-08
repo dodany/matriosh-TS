@@ -28,6 +28,11 @@ export class ForNode extends Node {
     console.log("construcor for ");
   }
 
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
   execute(table: Table, tree: Tree) {
 
     const newTable = new Table(table);

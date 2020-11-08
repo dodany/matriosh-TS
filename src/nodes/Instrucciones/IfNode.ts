@@ -20,6 +20,12 @@ export class IfNode extends Node {
     this.elseList = elseList;
   }
 
+
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
   execute(table: Table, tree: Tree) {
     const newTable = new Table(table);
     let result: Node;

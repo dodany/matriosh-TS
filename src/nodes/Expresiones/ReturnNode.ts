@@ -12,6 +12,12 @@ export class ReturnNode extends Node {
     this.value = value;
   }
 
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
+
   execute(table: Table, tree: Tree) {
     if (this.value !== null) {
       // RETURN UNA EXPRESIÓN

@@ -10,6 +10,14 @@ export class GraphNode extends Node {
     super(new Type(types.VOID), line, column);
   }
 
+
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
+
+
   execute(table: Table, tree: Tree) {
 
 /*

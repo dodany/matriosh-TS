@@ -17,6 +17,13 @@ export class RelationalNode extends Node {
     this.op = op;
   }
 
+
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
+
   execute(table: Table, tree: Tree) {
     this.type = new Type(types.BOOLEAN);
     const lResult = this.arg1.execute(table, tree);

@@ -18,6 +18,13 @@ export class TernarioNode extends Node {
     this.arg2 = arg2;
   }
 
+
+
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
   execute(table: Table,tree: Tree, ) {
     const newTable = new Table(table);
     let result: Node;

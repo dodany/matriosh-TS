@@ -14,6 +14,12 @@ export class IdNode extends Node {
     this.id = id;
   }
 
+
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
   execute(table: Table, tree: Tree) {
     let var_: Symbol;
 

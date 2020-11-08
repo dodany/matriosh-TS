@@ -26,6 +26,11 @@ export class FunctionNode extends Node {
     this.instList = instList;
   }
 
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
   execute(table: Table, tree: Tree) {
     let symbol: Symbol;
     const newTable = new Table(table);

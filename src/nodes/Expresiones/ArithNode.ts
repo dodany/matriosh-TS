@@ -4,24 +4,40 @@ import { types, Type } from '../../st/Type';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { TypeError, typesError } from '../../st/TypeError';
+import { Intermedio } from '../../st/Intermedio';
+import { Result } from '../..//st/Result';
 
 export class ArithNode extends Node {
+
+
   arg1: Node;
   arg2: Node;
   op: String;
 
-  constructor(
-    arg1: Node,
-    arg2: Node,
-    op: String,
-    line: Number,
-    column: Number
-  ) {
+  constructor(arg1: Node, arg2: Node, op: String,line: Number,column: Number) {
     super(null, line, column);
     this.arg1 = arg1;
     this.arg2 = arg2;
     this.op = op;
   }
+
+
+  genCode(table: Table, tree: Tree, intermedio:Intermedio) {
+
+    const lResult = this.arg1.genCode(table, tree,intermedio);
+    const rResult = this.arg2.genCode(table, tree,intermedio);
+
+    let temporal = intermedio.newTemporal();
+    let cad =  lResult.cadena   + rResult.cadena ;
+    switch (this.op) {
+      case '+':
+      cad += temporal +" = " +lResult.valor  + " + " + rResult.valor;
+      cad = intermedio.format( cad);
+      return new Result ( temporal, this.arg1.type, cad  );
+      break;
+    }
+  }
+
 
   execute(table: Table, tree: Tree) {
     const lResult = this.arg1.execute(table, tree);
@@ -48,13 +64,10 @@ export class ArithNode extends Node {
             case '+':
               console.log("suma normal");
               return lResult + rResult;
-              break;
             case '-':
               return lResult - rResult;
-              break;
             case '*':
               return lResult * rResult;
-              break;
             case '/':
               if (rResult === 0) {
                 const error = new ExceptionST(
@@ -69,13 +82,10 @@ export class ArithNode extends Node {
               } else {
                 return lResult / rResult;
               }
-              break;
             case '%':
               return lResult % rResult;
-              break;
             case '**':
               return lResult ** rResult;
-              break;
             default:
               const error = new ExceptionST(
                 typesError.SEMANTICO,
@@ -85,14 +95,12 @@ export class ArithNode extends Node {
 
               tree.excepciones.push(error);
               return null;
-              break;
           }
         } else if (this.arg1.type.type === types.STRING && this.arg2.type.type === types.STRING ) {
           this.type = new Type(types.STRING);
           switch (this.op) {
             case '+':
               return lResult + rResult;
-              break;
             default:
               const error = new ExceptionST(
                 typesError.SEMANTICO,
@@ -102,7 +110,6 @@ export class ArithNode extends Node {
 
               tree.excepciones.push(error);
               return null;
-              break;
           }
         } else if (this.arg1.type.type === types.ARRAY && this.arg2.type.type === types.ARRAY) {
           //ARRAYS
@@ -113,7 +120,6 @@ export class ArithNode extends Node {
           switch (this.op) {
             case '+':
               return lResult + rResult;
-              break;
           }
         }
         else {
@@ -139,13 +145,10 @@ export class ArithNode extends Node {
           switch (this.op) {
             case '++':
               return lResult + 1;
-              break;
             case '--':
               return lResult - 1;
-              break;
             case '-':
               return lResult * -1;
-              break;
             default:
               const error = new ExceptionST(
                 typesError.SEMANTICO,
@@ -155,7 +158,6 @@ export class ArithNode extends Node {
 
               tree.excepciones.push(error);
               return null;
-              break;
           }
         } else {
           //NO ES NUMBER
