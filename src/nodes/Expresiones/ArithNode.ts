@@ -27,15 +27,23 @@ export class ArithNode extends Node {
     const lResult = this.arg1.genCode(table, tree,intermedio);
     const rResult = this.arg2.genCode(table, tree,intermedio);
 
+
+    console.log( " left -> " + lResult.cadena );
+    console.log ("Right ->" + rResult.cadena );
+
     let temporal = intermedio.newTemporal();
-    let cad =  lResult.cadena   + rResult.cadena ;
+      let cadena =  lResult.cadena  + rResult.cadena ;
+    console.log("CADENA ->"  + cadena );
+
     switch (this.op) {
       case '+':
-      cad += temporal +" = " +lResult.valor  + " + " + rResult.valor;
-      cad = intermedio.format( cad);
-      return new Result ( temporal, this.arg1.type, cad  );
+      cadena += temporal +" = " +lResult.valor  + " + " + rResult.valor;
+      cadena = intermedio.format(cadena);
       break;
+
     }
+
+    return new Result ( temporal, this.arg1.type, cadena  );
   }
 
 
@@ -44,8 +52,6 @@ export class ArithNode extends Node {
     if (lResult instanceof ExceptionST) {
       return lResult;
     }
-
-
     if (this.arg1 !== null) {
       if (this.arg2 !== null) {
         //VIENEN AMBOS NODOS

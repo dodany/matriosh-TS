@@ -26,7 +26,6 @@ export class DeclareNode extends Node {
 
     console.log("DeclareNode ->" + result.cadena);
 
-
     let symbol: Symbol;
     symbol = new Symbol(this.type, this.id, 0, this.const_,[],1,1);
 
@@ -37,7 +36,9 @@ export class DeclareNode extends Node {
       return "";
     }
 
-    return null;
+    //Imprimir
+    tree.console.push(result.cadena);
+    return result.cadena;
   }
 
   execute(table: Table, tree: Tree) {

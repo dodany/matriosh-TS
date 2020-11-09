@@ -3,8 +3,8 @@ export class Intermedio {
   private etiqueta: number;
 
   constructor() {
-    this.temporal = 0;
-    this.etiqueta = 0;
+    this.temporal = -1;
+    this.etiqueta = -1;
   }
 
   /**
@@ -23,6 +23,6 @@ export class Intermedio {
   }
 
   public format(line_cod: String) {
-    return '\t' + line_cod + ';\n';
+    return  line_cod + ';\n';
   }
 }

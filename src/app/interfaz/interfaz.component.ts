@@ -1,4 +1,10 @@
-import { Component, OnInit, ElementRef, OnChanges, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  OnChanges,
+  AfterViewInit,
+} from '@angular/core';
 import { Table } from '../../st/Table';
 import { ExceptionST } from '../../st/ExceptionST';
 import { typesError } from '../../st/TypeError';
@@ -15,14 +21,13 @@ const grammar = require('../../parser/grammar.js');
 const grammar3D = require('../../parser/grammar_tree.js');
 
 //GRAMMAR_AST
-const grammarAST =require('../../parser/grammar_tree.js');
+const grammarAST = require('../../parser/grammar_tree.js');
 
 @Component({
   selector: 'app-interfaz',
   templateUrl: './interfaz.component.html',
   styleUrls: ['./interfaz.component.css'],
 })
-
 export class InterfazComponent implements OnInit {
   txtIn: string;
   txtOut: string;
@@ -33,27 +38,24 @@ export class InterfazComponent implements OnInit {
   chkError: boolean;
   txtoi: String;
   //
-  editor:any;
-  editorNativeElement:any;
-  height:number;
+  editor: any;
+  editorNativeElement: any;
+  height: number;
 
-  constructor( elRef:ElementRef) { //private _dataSvc:DataService
+  constructor(elRef: ElementRef) {
+    //private _dataSvc:DataService
     this.chkTree = true;
     this.chkConsola = true;
     this.chkError = true;
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   /**
    *
    * EJECUTAR
    */
   onEjecutar() {
-
-
     const result = arith_arbol.parse(this.txtIn);
     this.txtOut = result.val.toString();
 
@@ -70,16 +72,15 @@ export class InterfazComponent implements OnInit {
   }
 
   OnEjecutarTs() {
-
     const tree_ant = grammar.parse(this.txtIn);
     const tree = tree_ant.val;
 
-    grammar3D
+    grammar3D;
 
     const tabla = new Table(null);
 
     tree.instructions.map((m: any) => {
-       const res = m.execute(tabla, tree);
+      const res = m.execute(tabla, tree);
 
       //IMPRIME TODOS LOS NODOS
       console.log(m);
@@ -100,7 +101,6 @@ export class InterfazComponent implements OnInit {
         tree.excepciones.push(error);
       }
     });
-
 
     this.txtOut = tree.console.join('\n');
     //ERRORES
@@ -148,17 +148,14 @@ export class InterfazComponent implements OnInit {
     this.txtPila = '';
   }
 
-
   ////
-  OnEjecutar3D(){
-
+  OnEjecutar3D() {
     const tree_ant = grammar3D.parse(this.txtIn);
     const tree = tree_ant.C3D; //const tree = tree_ant.val;
     const tabla = new Table(null);
     const intermedio = new Intermedio();
 
     tree.instructions.map((m: any) => {
-
       const res = m.genCode(tabla, tree, intermedio);
 
       //IMPRIME TODOS LOS NODOS
@@ -179,18 +176,49 @@ export class InterfazComponent implements OnInit {
         );
         tree.excepciones.push(error);
       }
-
     });
 
-
-    this.txtOut = tree.console.join('\n');
+    let contenido = tree.console.join('\n');
+    this.txtOut = this.encabezado(intermedio.newTemporal()) + contenido +  this.cierre();
 
     //ERRORES
     this.txtErrores = tree.excepciones.join('\n');
     //PILA
     this.txtPila = tree.pila.join('\n');
-
-
   }
 
+  //Encabezado C
+  encabezado(last: String): String {
+    let ini =
+      '#include <stdio.h> //Importar para el uso de Printf' +
+      '\n' +
+      'double heap[132000]; //Estructura para heap ' +
+      '\n' +
+      'double stack[132000]; //Estructura para stack ' +
+      '\n' +
+      'double p; //Puntero P ' +
+      '\n' +
+      'double h; //Puntero H ' +
+      '\n' +
+      'double ';
+
+    // las t
+    let n = last.substring(1);
+    let t = '';
+    for (var i = 0; i < Number(n); i++) {
+      if (i == Number(n) - 1) {
+        t += 'T' + i + ';';
+      } else {
+        t += 'T' + i + ',';
+      }
+    }
+
+    let main = '\n\n' + 'int main() { ' + '\n';
+
+    return ini + t + main;
+  }
+
+  cierre(){
+    return '\n' + "return 0;"  +'\n' + '}'
+  }
 }
