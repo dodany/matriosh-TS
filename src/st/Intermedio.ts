@@ -22,7 +22,13 @@ export class Intermedio {
     return 'L' + this.etiqueta++;
   }
 
+  //AGREGAR FORMATO
   public format(line_cod: String) {
     return  line_cod + ';\n';
   }
+
+  public comment(line_cod: String, comentario: String){
+    return line_cod  + '//' + comentario  + '\n';
+  }
+
 }

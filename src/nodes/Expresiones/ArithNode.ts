@@ -8,44 +8,48 @@ import { Intermedio } from '../../st/Intermedio';
 import { Result } from '../..//st/Result';
 
 export class ArithNode extends Node {
-
-
   arg1: Node;
   arg2: Node;
   op: String;
 
-  constructor(arg1: Node, arg2: Node, op: String,line: Number,column: Number) {
+  constructor(
+    arg1: Node,
+    arg2: Node,
+    op: String,
+    line: Number,
+    column: Number
+  ) {
     super(null, line, column);
     this.arg1 = arg1;
     this.arg2 = arg2;
     this.op = op;
   }
 
-
-  genCode(table: Table, tree: Tree, intermedio:Intermedio) {
-
-    const lResult = this.arg1.genCode(table, tree,intermedio);
-    const rResult = this.arg2.genCode(table, tree,intermedio);
-
-
-    console.log( " left -> " + lResult.cadena );
-    console.log ("Right ->" + rResult.cadena );
+  genCode(table: Table, tree: Tree, intermedio: Intermedio) {
+    const lResult = this.arg1.genCode(table, tree, intermedio);
+    const rResult = this.arg2.genCode(table, tree, intermedio);
 
     let temporal = intermedio.newTemporal();
-      let cadena =  lResult.cadena  + rResult.cadena ;
-    console.log("CADENA ->"  + cadena );
+    let cadena = lResult.cadena + rResult.cadena;
 
     switch (this.op) {
       case '+':
-      cadena += temporal +" = " +lResult.valor  + " + " + rResult.valor;
-      cadena = intermedio.format(cadena);
-      break;
+        cadena += temporal + ' = ' + lResult.valor + ' + ' + rResult.valor;
+        cadena = intermedio.format(cadena);
+        cadena = intermedio.comment(
+          cadena,
+          'Suma de ' + lResult.valor + '+' + rResult.valor
+        );
+        break;
+      case '-':
+        break;
 
+      //POTENCIA SOLO ENTEROS
+      //STRINGS
     }
 
-    return new Result ( temporal, this.arg1.type, cadena  );
+    return new Result(temporal, this.arg1.type, cadena);
   }
-
 
   execute(table: Table, tree: Tree) {
     const lResult = this.arg1.execute(table, tree);
@@ -60,15 +64,18 @@ export class ArithNode extends Node {
           return rResult;
         }
 
-        console.log("arithNode");
-        console.log ( this.arg1.type.type);
-        console.log ( this.arg2.type.type);
+        console.log('arithNode');
+        console.log(this.arg1.type.type);
+        console.log(this.arg2.type.type);
 
-        if (this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.NUMBER) {
+        if (
+          this.arg1.type.type === types.NUMBER &&
+          this.arg2.type.type === types.NUMBER
+        ) {
           this.type = new Type(types.NUMBER);
           switch (this.op) {
             case '+':
-              console.log("suma normal");
+              console.log('suma normal');
               return lResult + rResult;
             case '-':
               return lResult - rResult;
@@ -102,7 +109,10 @@ export class ArithNode extends Node {
               tree.excepciones.push(error);
               return null;
           }
-        } else if (this.arg1.type.type === types.STRING && this.arg2.type.type === types.STRING ) {
+        } else if (
+          this.arg1.type.type === types.STRING &&
+          this.arg2.type.type === types.STRING
+        ) {
           this.type = new Type(types.STRING);
           switch (this.op) {
             case '+':
@@ -117,18 +127,24 @@ export class ArithNode extends Node {
               tree.excepciones.push(error);
               return null;
           }
-        } else if (this.arg1.type.type === types.ARRAY && this.arg2.type.type === types.ARRAY) {
+        } else if (
+          this.arg1.type.type === types.ARRAY &&
+          this.arg2.type.type === types.ARRAY
+        ) {
           //ARRAYS
           return null;
-        } else if ((this.arg1.type.type === types.STRING && this.arg2.type.type === types.NUMBER)  ||
-        (this.arg1.type.type === types.NUMBER && this.arg2.type.type === types.STRING))  {
+        } else if (
+          (this.arg1.type.type === types.STRING &&
+            this.arg2.type.type === types.NUMBER) ||
+          (this.arg1.type.type === types.NUMBER &&
+            this.arg2.type.type === types.STRING)
+        ) {
           this.type = new Type(types.STRING);
           switch (this.op) {
             case '+':
               return lResult + rResult;
           }
-        }
-        else {
+        } else {
           const error = new ExceptionST(
             typesError.SEMANTICO,
             `No se pueden operar ` +
@@ -178,7 +194,7 @@ export class ArithNode extends Node {
           return null;
         }
       }
-    }else{
+    } else {
       return null;
     }
   }
