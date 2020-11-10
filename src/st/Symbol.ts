@@ -35,10 +35,11 @@ export class Symbol {
  *Imprimir
  */
   toString() {
-    if (this.instList == null) {
-      return ( this.type + ' - ' + this.identifier + ' - ' + this.value + ' - ' + this.const_);
-    } else {
-      return ( this.type + ' - ' + this.identifier + ' - ' + this.value + ' - ' + this.const_ + ' <INSTRUCCIONES> ' );
-    }
+
+      return (this.type + ' - ' + this.identifier + ' - ' + this.value + ' - ' + this.const_ + ' -  ' + this.position + ' - ' + this.tam);
+    //} else {
+      //return ( this.type + ' - ' + this.identifier + ' - ' + this.value + ' - ' + this.const_ + ' <INSTRUCCIONES> ' );
+    //}
   }
+
 }

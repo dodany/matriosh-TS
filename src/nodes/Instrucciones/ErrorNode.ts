@@ -13,7 +13,7 @@ export class ErrorNode extends Node {
   }
 
   genCode(table: Table, tree: Tree) {
-
+    tree.excepciones.push(this.err);
     return "";
   }
 

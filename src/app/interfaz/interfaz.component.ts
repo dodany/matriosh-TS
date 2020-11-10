@@ -12,6 +12,7 @@ import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode } from '../../nodes/Expresiones/BreakNode';
 import CodeMirror from 'codemirror';
 import { Intermedio } from 'src/st/Intermedio';
+import { DeclareNode } from 'src/nodes/Instrucciones/DeclareNode';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
@@ -157,7 +158,6 @@ export class InterfazComponent implements OnInit {
 
     tree.instructions.map((m: any) => {
       const res = m.genCode(tabla, tree, intermedio);
-
       //IMPRIME TODOS LOS NODOS
       console.log(m);
 
@@ -178,13 +178,20 @@ export class InterfazComponent implements OnInit {
       }
     });
 
+
     let contenido = tree.console.join('\n');
     this.txtOut = this.encabezado(intermedio.newTemporal()) + contenido +  this.cierre();
 
     //ERRORES
     this.txtErrores = tree.excepciones.join('\n');
     //PILA
-    this.txtPila = tree.pila.join('\n');
+    let pila = tree.pila.join('\n');
+    this.txtPila = this.encabezado_pila() + pila ;
+  }
+
+  encabezado_pila(){
+    let ini= 'Type  -' +  ' id -'  + ' Val -' + ' Const -' +  ' Pos -' + ' size  '+ '\n';
+    return ini;
   }
 
   //Encabezado C
@@ -214,7 +221,6 @@ export class InterfazComponent implements OnInit {
     }
 
     let main = '\n\n' + 'int main() { ' + '\n';
-
     return ini + t + main;
   }
 

@@ -30,7 +30,7 @@ export class Table{
             }
         }
         this.Variables.set(symbol.identifier, symbol);
-        return null;
+        return symbol.identifier;
     }
 
 

@@ -12,13 +12,7 @@ export class ArithNode extends Node {
   arg2: Node;
   op: String;
 
-  constructor(
-    arg1: Node,
-    arg2: Node,
-    op: String,
-    line: Number,
-    column: Number
-  ) {
+  constructor(arg1: Node,arg2: Node,op: String,line: Number,column: Number) {
     super(null, line, column);
     this.arg1 = arg1;
     this.arg2 = arg2;
@@ -36,10 +30,7 @@ export class ArithNode extends Node {
       case '+':
         cadena += temporal + ' = ' + lResult.valor + ' + ' + rResult.valor;
         cadena = intermedio.format(cadena);
-        cadena = intermedio.comment(
-          cadena,
-          'Suma de ' + lResult.valor + '+' + rResult.valor
-        );
+        cadena = intermedio.comment(cadena, 'Suma de ' + lResult.valor + '+' + rResult.valor);
         break;
       case '-':
         break;
@@ -48,7 +39,7 @@ export class ArithNode extends Node {
       //STRINGS
     }
 
-    return new Result(temporal, this.arg1.type, cadena);
+    return new Result(temporal, this.arg1.type ,cadena);
   }
 
   execute(table: Table, tree: Tree) {

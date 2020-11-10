@@ -3,6 +3,7 @@ import { Type  } from '../../st/Type';
 import { Table } from '../../st/Table';
 import { Tree  } from '../../st/Tree';
 import { Result } from '../..//st/Result';
+import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 
 export class ValueNode extends Node {
   value: Object;
