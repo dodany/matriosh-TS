@@ -22,6 +22,7 @@
     const {CallNode} = require('../nodes/Instrucciones/CallNode');
     const {TernarioNode} = require('../nodes/Instrucciones/TernarioNode');
     const {ForNode} = require('../nodes/Instrucciones/ForNode');
+    const {ParamNode} = require('../nodes/Instrucciones/ParamNode');
 %}
 
 %lex

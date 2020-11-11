@@ -4,6 +4,8 @@ import { Tree } from '../../st/Tree';
 import { Symbol } from '../../st/Symbol';
 import { ExceptionST } from '../../st/ExceptionST';
 import { TypeError, typesError } from '../../st/TypeError';
+import { Intermedio } from '../../st/Intermedio';
+import { Result } from '../..//st/Result';
 
 
 export class TernarioNode extends Node {
@@ -20,8 +22,9 @@ export class TernarioNode extends Node {
 
 
 
-  genCode(table: Table, tree: Tree) {
+  genCode(table: Table, tree: Tree, intermedio:Intermedio ) {
 
+    console.log("logramos el ternario ");
     return "";
   }
 

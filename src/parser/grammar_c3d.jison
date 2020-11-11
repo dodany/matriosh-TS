@@ -23,6 +23,9 @@
     const {CallNode} = require('../nodes/Instrucciones/CallNode');
     const {TernarioNode} = require('../nodes/Instrucciones/TernarioNode');
     const {ForNode} = require('../nodes/Instrucciones/ForNode');
+    const {ParamNode} = require('../nodes/Instrucciones/ParamNode');
+    const {CaseNode} = require('../nodes/Instrucciones/CaseNode');
+    const {SwitchNode} = require('../nodes/Instrucciones/SwitchNode');
 %}
 
 %lex
@@ -92,6 +95,12 @@ number [0-9]+("."[0-9]+)?\b
 "const"               return 'const'
 "function"            return 'function'
 "new"                 return 'new'
+"array"               return 'array'
+"default"             return 'default'
+"CharAt"              return 'charAt'
+"toLowerCase"         return 'toLowerCase'
+"toUpperCase"         return 'toUpperCase'
+"Concat"              return 'Concat'
 "console.log"         return 'console.log'
 "graficar_ts"         return 'graficar_ts'
 {identifier}          return 'identifier'
@@ -149,8 +158,14 @@ INSTRUCCION : FUNCTION          {$$ = { C3D:$1.C3D }}
                                       "[" + this._$.first_line +"," + this._$.first_column + "]"))          }}
             ;
 
-FUNCTION :  'function' identifier '(' ')' '{'  INSTRUCCIONES '}' {$$ = { C3D: new FunctionNode (new Type(types.VOID),$2, $6.C3D,this._$.first_line, this._$.first_column)}}
+FUNCTION :   'function' identifier '(' ')' '{'  INSTRUCCIONES '}' {$$ = { C3D: new FunctionNode (new Type(types.VOID),$2, $6.C3D,this._$.first_line, this._$.first_column,[])}}
+           | 'function' identifier '(' ')' ':' TIPO '{' INSTRUCCIONES '}' { C3D: new FunctionNode ($7.C3D,$2, $6.C3D,this._$.first_line, this._$.first_column,[])}}
+           | 'function' identifier '(' LP ')' ':' TIPO '{' INSTRUCCIONES '}' { $$ = { C3D: new FunctionNode( $7.C3D, $2, $9.C3D, this._$.first_line, this._$.first_column,$4.C3D) }}
          ;
+
+LP: LP ',' identifier ':' TIPO { $$={ C3D: $1.C3D} ; $$.C3D.push(new ParamNode( $5.C3D.type,  $3, this._$.first_line, this._$.first_column));  }
+        |  identifier ':' TIPO { $$ ={ C3D: [new ParamNode( $3.C3D.type,  $1, this._$.first_line, this._$.first_column)] } }
+    ;
 
 CALLFUNCTION: identifier '(' ')' ';'  {  $$ ={ C3D: new CallNode($1, this._$.first_line, this._$.first_column)}}
             ;
@@ -158,6 +173,7 @@ CALLFUNCTION: identifier '(' ')' ';'  {  $$ ={ C3D: new CallNode($1, this._$.fir
 DECLARACION : 'TIPOF' identifier '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D.type, $2, $4.C3D,this._$.first_line, this._$.first_column,$1.C3D) }}
             | 'TIPOF' identifier ':' TIPO '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D, $2, $6.C3D, this._$.first_line, this._$.first_column, $1.C3D) }}
             | 'TIPOF' identifier ':' TIPO '[' ']' '=' '[' LE ']' ';' {$$ ={ C3D: new DeclareArrayNode( $4.C3D.type, $2, $9.C3D, this._$.first_line, this._$.first_column, $1.C3D ) } }
+            | 'TIPOF' identifier ':' TIPO '[' ']' '=' 'new' 'array' '(' EXP ')' ';' {$$ = { C3D: new DeclareArrayNode( $4.C3D.type, $2,[$7.C3D] ,this._$.first_line, this._$.first_column, $1.C3D)  }}
             ;
 
 LE : LE ',' EXP  { $$ = {C3D: $1.C3D } ; $$.C3D.push($3.C3D); }
@@ -189,28 +205,33 @@ IF : 'if' CONDICION BLOQUE_INSTRUCCIONES                              {$$ = { C3
    ;
 
 
-//SWITCH
-SWITCH : 'switch' CONDICION '{' CASELIST '}'
+//TERNARIO
+TERNARIO  : CONDICION '?' EXP ':' EXP  {$$ ={C3D: new TernarioNode($1.C3D, $3.C3D, $5.C3D, this._$.first_line, this._$.first_column)    }}
       ;
 
-CASELIST : CASELIST CASE
-        |CASE
+//SWITCH
+SWITCH : 'switch' '(' EXP ')' '{' CASELIST '}' { $$ ={ C3D: new SwitchNode( $2.C3D, $4.C3D, this._$.first_line, this._$.first_column)} }
+      ;
+
+CASELIST : CASELIST CASE {$$ = { C3D: $1.C3D } ; $$.C3D.push($2.C3D); }
+        |CASE            {$$ = { C3D: [$1.C3D] }}
         ;
 
-CASE : 'case' CONDICION ':'
+CASE : 'case' EXP ':' BLOQUE_INSTRUCCIONES {$$ = {C3D: new CaseNode ( $4.C3D,  this._$.first_line, this._$.first_colum,$2.C3D) }}
+     |  'default' ':' BLOQUE_INSTRUCCIONES {$$ = {C3D: new CaseNode ( $3.C3D, this._$.first_line, this._$.first_colum ) }}
       ;
 
+
+//WHILE
 WHILE : 'while' CONDICION BLOQUE_INSTRUCCIONES
         {$$ = { C3D: new WhileNode($2.C3D, $3.C3D, this._$.first_line, this._$.first_column) }}
       ;
 
-DO :  'do' BLOQUE_INSTRUCCIONES 'while' CONDICION ';'
-{$$ = { C3D: new WhileNode($4.C3D, $2.C3D, this._$.first_line, this._$.first_column) }}
+DO :  'do' BLOQUE_INSTRUCCIONES 'while' CONDICION ';' {$$ = { C3D: new WhileNode($4.C3D, $2.C3D, this._$.first_line, this._$.first_column) }}
       ;
 
 
-FOR : 'for' '(' 'let' identifier '=' EXP ';'  EXP ';' EXP ')' '{' BLOQUE_INSTRUCCIONES '}'
-        {$$ = {C3D: new ForNode (  $4, $5.node, $7.node, $9.node ,  this._$.first_line, this._$.first_column ) }}
+FOR : 'for' '(' 'let' identifier '=' EXP ';'  EXP ';' EXP ')' '{' BLOQUE_INSTRUCCIONES '}'{$$ = {C3D: new ForNode (  $4, $5.node, $7.node, $9.node ,  this._$.first_line, this._$.first_column ) }}
     ;
 
 BLOQUE_INSTRUCCIONES : '{' INSTRUCCIONES '}' {$$ = { C3D: $2.C3D }}

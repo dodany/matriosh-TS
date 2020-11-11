@@ -15,7 +15,8 @@
     "./src/nodes/Instrucciones/ErrorNode.ts","./src/nodes/Instrucciones/GraphNode.ts",
     "./src/nodes/Instrucciones/FunctionNode.ts", "./src/nodes/Instrucciones/CallNode.ts",
     "./src/nodes/Instrucciones/TernarioNode.ts", "./src/nodes/Instrucciones/ForNode.ts",
-    "./src/nodes/Instrucciones/DeclareArrayNode.ts"
+    "./src/nodes/Instrucciones/DeclareArrayNode.ts", "./src/nodes/Instrucciones/ParamNode.ts",
+    "./src/nodes/Instrucciones/SwitchNode.ts","./src/nodes/Instrucciones/CaseNode.ts"
   ],
   "include": [
     "src/**/*.d.ts",
