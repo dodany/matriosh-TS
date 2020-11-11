@@ -19,7 +19,7 @@ declare const generateTree: any;
 const grammar = require('../../parser/grammar.js');
 
 //GRAMMAR_3D
-const grammar3D = require('../../parser/grammar_tree.js');
+const grammar3D = require('../../parser/grammar_c3d.js');
 
 //GRAMMAR_AST
 const grammarAST = require('../../parser/grammar_tree.js');
@@ -151,6 +151,7 @@ export class InterfazComponent implements OnInit {
 
   ////
   OnEjecutar3D() {
+
     const tree_ant = grammar3D.parse(this.txtIn);
     const tree = tree_ant.C3D; //const tree = tree_ant.val;
     const tabla = new Table(null);

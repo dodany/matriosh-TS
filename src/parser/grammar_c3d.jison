@@ -15,6 +15,7 @@
     const {IfNode} = require('../nodes/Instrucciones/IfNode');
     const {WhileNode} = require('../nodes/Instrucciones/WhileNode');
     const {DeclareNode} = require('../nodes/Instrucciones/DeclareNode');
+    const {DeclareArrayNode} = require('../nodes/Instrucciones/DeclareArrayNode');
     const {AsigNode} = require('../nodes/Instrucciones/AsigNode');
     const {ErrorNode}  = require('../nodes/Instrucciones/ErrorNode');
     const {GraphNode}  = require('../nodes/Instrucciones/GraphNode');
@@ -41,6 +42,7 @@ number [0-9]+("."[0-9]+)?\b
 "*"                   return '*'
 "/"                   return '/'
 ";"                   return ';'
+","                   return ','
 "-"                   return '-'
 "+"                   return '+'
 "++"                  return '++'
@@ -89,6 +91,7 @@ number [0-9]+("."[0-9]+)?\b
 "let"                 return 'let'
 "const"               return 'const'
 "function"            return 'function'
+"new"                 return 'new'
 "console.log"         return 'console.log'
 "graficar_ts"         return 'graficar_ts'
 {identifier}          return 'identifier'
@@ -154,7 +157,12 @@ CALLFUNCTION: identifier '(' ')' ';'  {  $$ ={ C3D: new CallNode($1, this._$.fir
 
 DECLARACION : 'TIPOF' identifier '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D.type, $2, $4.C3D,this._$.first_line, this._$.first_column,$1.C3D) }}
             | 'TIPOF' identifier ':' TIPO '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D, $2, $6.C3D, this._$.first_line, this._$.first_column, $1.C3D) }}
+            | 'TIPOF' identifier ':' TIPO '[' ']' '=' '[' LE ']' ';' {$$ ={ C3D: new DeclareArrayNode( $4.C3D.type, $2, $9.C3D, this._$.first_line, this._$.first_column, $1.C3D ) } }
             ;
+
+LE : LE ',' EXP  { $$ = {C3D: $1.C3D } ; $$.C3D.push($3.C3D); }
+   | EXP {$$ = { C3D: [$1.C3D] }}
+   ;
 
 ASIGNACION : identifier '=' EXP ';' {$$ = { C3D: new AsigNode($1, $3.C3D, this._$.first_line, this._$.first_column) }}
            ;

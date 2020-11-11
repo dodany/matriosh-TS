@@ -7,7 +7,6 @@ import { Symbol } from '../../st/Symbol';
 import { TypeError, typesError } from '../../st/TypeError';
 import { Intermedio } from '../../st/Intermedio';
 import { Result } from '../..//st/Result';
-import { cachedDataVersionTag } from 'v8';
 
 export class DeclareNode extends Node {
   type: Type;
@@ -50,7 +49,6 @@ export class DeclareNode extends Node {
           symbol = new Symbol(result.type,this.id,result.valor,this.const_,[],sp,1);
           cadena = this.StackpointerC3D(temporal, cadena, sp, result.valor);
         } else {
-          //LOS OTROS VALORES
         }
       } else {
         //*********** */ ASIGNACIÓN de ValueNode
@@ -63,21 +61,32 @@ export class DeclareNode extends Node {
           //CADENA
           let hp = intermedio.setHP();
           symbol = new Symbol(this.type,this.id,result.valor,this.const_,[],hp, 1);
-          cadena = this.StackpointerC3D(temporal, cadena, sp, result.valor);
+
+          cadena = this.StackpointerC3D(temporal, cadena, sp, temporal);
 
           console.log ( "heap actual antes -> " + intermedio.getHP() );
+          console.log (" valor.lenght cadena -> " + result.valor.length);
 
-          intermedio.setHp_memory ( result.valor.length -1);
+
+
+          intermedio.setHp_memory ( result.valor.length);
           // heap
           cadena = this.HeapPointerC3D(  temporal, cadena, hp, result.valor);
           // VERIFICAR SI ES NULL
           console.log ( "heap actual después -> " + intermedio.getHP() );
 
+        } else if ( this.type.type === types.BOOLEAN) {
+          //LOS OTROS VALORES
+          console.log("si andamos por acá");
+          let b= result.valor == 'true';
+
+          symbol= new Symbol ( result.type, this.id, Number(b), this.const_,[], sp,1);
+          cadena = this.StackpointerC3D(temporal, cadena, sp, Number(b).toString());
+
         }
       }
 
-      //INSERTAR
-
+      //INSERTAR en la tabla de simbolos
       const res = table.setVariable(symbol);
       // verificar
       if (res == null) {
@@ -85,8 +94,6 @@ export class DeclareNode extends Node {
         const error = new ExceptionST(typesError.SEMANTICO, res + ',','[' + this.line + ',' + this.column + ']');
         tree.excepciones.push(error);
       } else {
-
-        cadena = this.StackpointerC3D(temporal, cadena, sp, result.valor);
 
         tree.console.push(cadena);
         return new Result(temporal, this.type, cadena);
@@ -101,8 +108,6 @@ export class DeclareNode extends Node {
     }
   }
 
-  private add_ts() {}
-
   private StackpointerC3D(temporal: String, cadena: String, sp: Number, result: String ): String {
     cadena += temporal + ' = ' + 'p' + ' + ' + sp;
     cadena += ';\n';
@@ -116,16 +121,19 @@ export class DeclareNode extends Node {
 
   private HeapPointerC3D(temporal:String, cadena:String, hp: Number, result:String): String {
 
-    for ( let i=0; i<result.length ; i++){
+    if ( result.length>0){
 
-      cadena += 'heap[(int)h] = ' + result.charCodeAt(i);
-      cadena += ';\n';
+      for ( let i=0; i<result.length ; i++){
 
-      cadena += 'h = h + 1';
-      cadena += ';\n';
+        cadena += 'heap[(int)h] = ' + result.charCodeAt(i);
+        cadena += ';\n';
+
+        cadena += 'h = h + 1';
+        cadena += ';\n';
+      }
     }
 
-      cadena+= ' heap[(int)h] = -1';
+      cadena+= 'heap[(int)h] = -1';
       cadena += ';\n';
 
     return cadena;
