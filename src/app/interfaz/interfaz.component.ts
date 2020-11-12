@@ -6,13 +6,15 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { Table } from '../../st/Table';
+import { Tree } from '../../st/Tree';
 import { ExceptionST } from '../../st/ExceptionST';
 import { typesError } from '../../st/TypeError';
 import { ContinueNode } from '../../nodes/Expresiones/ContinueNode';
 import { BreakNode } from '../../nodes/Expresiones/BreakNode';
 import CodeMirror from 'codemirror';
-import { Intermedio } from 'src/st/Intermedio';
-import { DeclareNode } from 'src/nodes/Instrucciones/DeclareNode';
+import { Intermedio } from '../../st/Intermedio';
+import { DeclareNode } from '../../nodes/Instrucciones/DeclareNode';
+
 
 declare const arith_arbol: any;
 declare const generateTree: any;
@@ -135,7 +137,7 @@ export class InterfazComponent implements OnInit {
 
   /**
    *
-   * LIMPIAR CONSOLA SALIDA
+   * LIMPIAR CONSOLA SALIDA;
    */
   onCleanOut() {
     this.txtOut = '';
@@ -152,31 +154,48 @@ export class InterfazComponent implements OnInit {
   ////
   OnEjecutar3D() {
 
-    const tree_ant = grammar3D.parse(this.txtIn);
-    const tree = tree_ant.C3D; //const tree = tree_ant.val;
+   // const tree_ant = grammar3D.parse(this.txtIn);
+    //const tree = tree_ant.C3D; //const tree = tree_ant.val;
     const tabla = new Table(null);
     const intermedio = new Intermedio();
 
-    tree.instructions.map((m: any) => {
-      const res = m.genCode(tabla, tree, intermedio);
-      //IMPRIME TODOS LOS NODOS
-      console.log(m);
 
-      if (res instanceof BreakNode) {
-        const error = new ExceptionST(
-          typesError.SEMANTICO,
-          `Sentencia break fuera de un ciclo` + ',',
-          '[' + res.line + ',' + res.column + ']'
-        );
-        tree.excepciones.push(error);
-      } else if (res instanceof ContinueNode) {
-        const error = new ExceptionST(
-          typesError.SEMANTICO,
-          `Sentencia continue fuera de un ciclo` + ',',
-          '[' + res.line + ',' + res.column + ']'
-        );
-        tree.excepciones.push(error);
+  const t1=  this.declare_(this.txtIn);
+  console.log(t1);
+
+  const tree = this.declare_tee( this.txtIn);
+console.log(tree);
+
+    tree.instructions.map((m: any) => {
+
+
+      if (!(m instanceof DeclareNode)){
+
+
+
+        console.log("********else");
+        console.log(m);
+
+         //console.log("yeseyes yes ");
+         const res = m.genCode(t1, tree, intermedio);
+         if (res instanceof BreakNode) {
+           const error = new ExceptionST(
+             typesError.SEMANTICO,
+             `Sentencia break fuera de un ciclo` + ',',
+             '[' + res.line + ',' + res.column + ']'
+           );
+           tree.excepciones.push(error);
+         } else if (res instanceof ContinueNode) {
+           const error = new ExceptionST(
+             typesError.SEMANTICO,
+             `Sentencia continue fuera de un ciclo` + ',',
+             '[' + res.line + ',' + res.column + ']'
+           );
+           tree.excepciones.push(error);
+         }
+
       }
+
     });
 
 
@@ -185,6 +204,7 @@ export class InterfazComponent implements OnInit {
 
     //ERRORES
     this.txtErrores = tree.excepciones.join('\n');
+
     //PILA
     let pila = tree.pila.join('\n');
     this.txtPila = this.encabezado_pila() + pila ;
@@ -228,4 +248,40 @@ export class InterfazComponent implements OnInit {
   cierre(){
     return '\n' + "return 0;"  +'\n' + '}'
   }
+
+
+  //PRIMERA PASADA INSERTANDO tabla de simbolos
+  declare_( txtIn:String ):Table {
+    const tree= grammar3D.parse( txtIn).C3D;
+    const tabla = new Table(null);
+    const intermedio = new Intermedio();
+
+    tree.instructions.map ((m:any) =>{
+      if (m instanceof DeclareNode){
+        const res = m.genCode ( tabla, tree, intermedio);
+        // Devolver RES
+
+      }
+
+    });
+
+    return tabla;
+  }
+
+  //PRIMERA PASADA PARA CREAR tree
+  declare_tee ( txtIn:String):Tree {
+    const tree= grammar3D.parse( txtIn).C3D;
+    const tabla = new Table(null);
+    const intermedio = new Intermedio();
+
+    tree.instructions.map ((m:any) =>{
+      if (m instanceof DeclareNode){
+        const res = m.genCode ( tabla, tree, intermedio);
+        // Devolver RES
+      }
+    });
+
+    return tree;
+  }
+
 }

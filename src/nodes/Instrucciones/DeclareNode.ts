@@ -6,7 +6,7 @@ import { ExceptionST } from '../../st/ExceptionST';
 import { Symbol } from '../../st/Symbol';
 import { TypeError, typesError } from '../../st/TypeError';
 import { Intermedio } from '../../st/Intermedio';
-import { Result } from '../..//st/Result';
+import { Result } from '../../st/Result';
 
 export class DeclareNode extends Node {
   type: Type;
@@ -20,6 +20,11 @@ export class DeclareNode extends Node {
     this.id = id;
     this.value = value;
     this.const_ = const_;
+  }
+
+
+  init(table: Table, tree:Tree, intermedio:Intermedio ) {
+
   }
 
   genCode(table: Table, tree: Tree, intermedio: Intermedio) {
@@ -101,6 +106,13 @@ export class DeclareNode extends Node {
     } else {
       // YA EXISTE el id
 
+      const error = new ExceptionST(
+        typesError.SEMANTICO,
+        "Ya existe " + ',',
+        '[' + this.line + ',' + this.column + ']'
+      );
+      tree.excepciones.push(error);
+      return "";
     }
   }
 
