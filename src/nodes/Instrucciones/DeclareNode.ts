@@ -25,11 +25,12 @@ export class DeclareNode extends Node {
   genCode(table: Table, tree: Tree, intermedio: Intermedio) {
     const result = this.value.genCode(table, tree, intermedio);
 
+    /*
     console.log('DeclareNode value ->' + this.value.type);
     console.log('DeclareNode type ->' + this.type);
     console.log('result.cadena  cadena ->' + result.cadena);
     console.log('result.valor valor->' + result.valor);
-    console.log('result.types  types->' + result.types);
+    console.log('result.types  types->' + result.types); */
 
     //PRIMERO VERIFICAR LA VARIABLE
     let var_: Symbol;
@@ -64,16 +65,14 @@ export class DeclareNode extends Node {
 
           cadena = this.StackpointerC3D(temporal, cadena, sp, temporal);
 
-          console.log ( "heap actual antes -> " + intermedio.getHP() );
-          console.log (" valor.lenght cadena -> " + result.valor.length);
-
-
+         // console.log ( "heap actual antes -> " + intermedio.getHP() );
+         // console.log (" valor.lenght cadena -> " + result.valor.length);
 
           intermedio.setHp_memory ( result.valor.length);
           // heap
           cadena = this.HeapPointerC3D(  temporal, cadena, hp, result.valor);
           // VERIFICAR SI ES NULL
-          console.log ( "heap actual después -> " + intermedio.getHP() );
+          //console.log ( "heap actual después -> " + intermedio.getHP() );
 
         } else if ( this.type.type === types.BOOLEAN) {
           //LOS OTROS VALORES
@@ -98,9 +97,6 @@ export class DeclareNode extends Node {
         tree.console.push(cadena);
         return new Result(temporal, this.type, cadena);
       }
-
-
-
 
     } else {
       // YA EXISTE el id

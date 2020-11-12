@@ -1,4 +1,3 @@
-
 import { Node } from '../Node';
 import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
@@ -11,7 +10,8 @@ import { TypeError, typesError } from '../../st/TypeError';
 import { Intermedio } from '../../st/Intermedio';
 import { Result } from '../..//st/Result';
 
-export class SwhitchNode extends Node{
+export class SwitchNode extends Node {
+
 
   value:Node;
   caseList:Array<Node>;
@@ -32,6 +32,7 @@ export class SwhitchNode extends Node{
 
   execute(table:Table, tree:Tree){
 
+    return "";
   }
 
 }

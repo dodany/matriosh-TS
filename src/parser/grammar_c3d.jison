@@ -26,6 +26,8 @@
     const {ParamNode} = require('../nodes/Instrucciones/ParamNode');
     const {CaseNode} = require('../nodes/Instrucciones/CaseNode');
     const {SwitchNode} = require('../nodes/Instrucciones/SwitchNode');
+    const {ForInOfNode} = require('../nodes/Instrucciones/ForInOfNode');
+    const {TypesNode} = require('../nodes/Instrucciones/TypesNode');
 %}
 
 %lex
@@ -42,21 +44,21 @@ number [0-9]+("."[0-9]+)?\b
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]			// comentario multiple líneas
 {number}             return 'number'
 "**"                  return '**'
+"++"                  return '++'
+"--"                  return '--'
+"<="                  return '<='
+">="                  return '>='
+"=="                  return '=='
 "*"                   return '*'
 "/"                   return '/'
+":"                   return ':'
 ";"                   return ';'
 ","                   return ','
 "-"                   return '-'
 "+"                   return '+'
-"++"                  return '++'
-"--"                  return '--'
 "%"                   return '%'
 "<"                   return '<'
 ">"                   return '>'
-"<="                  return '<='
-">="                  return '>='
-"=="                  return '=='
-":"                   return ':'
 "!="                  return '!='
 "?"                   return '?'
 "||"                  return '||'
@@ -174,6 +176,7 @@ DECLARACION : 'TIPOF' identifier '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D
             | 'TIPOF' identifier ':' TIPO '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D, $2, $6.C3D, this._$.first_line, this._$.first_column, $1.C3D) }}
             | 'TIPOF' identifier ':' TIPO '[' ']' '=' '[' LE ']' ';' {$$ ={ C3D: new DeclareArrayNode( $4.C3D.type, $2, $9.C3D, this._$.first_line, this._$.first_column, $1.C3D ) } }
             | 'TIPOF' identifier ':' TIPO '[' ']' '=' 'new' 'array' '(' EXP ')' ';' {$$ = { C3D: new DeclareArrayNode( $4.C3D.type, $2,[$7.C3D] ,this._$.first_line, this._$.first_column, $1.C3D)  }}
+            | 'type' identifier '=' '{' LP '}' ';' { $$ = { C3D: new TypesNode( $2, $5.C3D,  this._$.first_line, this._$.first_column) }}
             ;
 
 LE : LE ',' EXP  { $$ = {C3D: $1.C3D } ; $$.C3D.push($3.C3D); }
@@ -206,36 +209,44 @@ IF : 'if' CONDICION BLOQUE_INSTRUCCIONES                              {$$ = { C3
 
 
 //TERNARIO
-TERNARIO  : CONDICION '?' EXP ':' EXP  {$$ ={C3D: new TernarioNode($1.C3D, $3.C3D, $5.C3D, this._$.first_line, this._$.first_column)    }}
+TERNARIO  : CONDICION '?' EXP ':' EXP  {$$ ={C3D: new TernarioNode($1.C3D, $3.C3D, $5.C3D, this._$.first_line, this._$.first_column) }}
       ;
 
 //SWITCH
-SWITCH : 'switch' '(' EXP ')' '{' CASELIST '}' { $$ ={ C3D: new SwitchNode( $2.C3D, $4.C3D, this._$.first_line, this._$.first_column)} }
+SWITCH : 'switch' CONDICION '{' CASELIST '}' { $$ ={C3D: new SwitchNode( $2.C3D, $4.C3D, this._$.first_line, this._$.first_column)  }}
       ;
 
 CASELIST : CASELIST CASE {$$ = { C3D: $1.C3D } ; $$.C3D.push($2.C3D); }
         |CASE            {$$ = { C3D: [$1.C3D] }}
         ;
 
-CASE : 'case' EXP ':' BLOQUE_INSTRUCCIONES {$$ = {C3D: new CaseNode ( $4.C3D,  this._$.first_line, this._$.first_colum,$2.C3D) }}
-     |  'default' ':' BLOQUE_INSTRUCCIONES {$$ = {C3D: new CaseNode ( $3.C3D, this._$.first_line, this._$.first_colum ) }}
-      ;
-
+CASE : 'case' EXP ':' BLOQUE_INSTRUCCIONES_W {$$ = {C3D: new CaseNode ( $4.C3D, this._$.first_line, this._$.first_colum,$2.C3D) }}
+     |  'default' ':' BLOQUE_INSTRUCCIONES_W {$$ = {C3D: new CaseNode ( $3.C3D, this._$.first_line, this._$.first_colum ) }}
+     ;
 
 //WHILE
-WHILE : 'while' CONDICION BLOQUE_INSTRUCCIONES
-        {$$ = { C3D: new WhileNode($2.C3D, $3.C3D, this._$.first_line, this._$.first_column) }}
+WHILE : 'while' CONDICION BLOQUE_INSTRUCCIONES {$$ = { C3D: new WhileNode($2.C3D, $3.C3D, this._$.first_line, this._$.first_column) }}
       ;
 
+//DO WHILE
 DO :  'do' BLOQUE_INSTRUCCIONES 'while' CONDICION ';' {$$ = { C3D: new WhileNode($4.C3D, $2.C3D, this._$.first_line, this._$.first_column) }}
       ;
 
-
-FOR : 'for' '(' 'let' identifier '=' EXP ';'  EXP ';' EXP ')' '{' BLOQUE_INSTRUCCIONES '}'{$$ = {C3D: new ForNode (  $4, $5.node, $7.node, $9.node ,  this._$.first_line, this._$.first_column ) }}
+//FOR
+FOR : 'for' '(' DECLARACION  EXP ';' EXP ')'  BLOQUE_INSTRUCCIONES {$$ = {C3D: new ForNode (  $3.C3D, $4.C3D, $6.C3D, $8.C3D ,  this._$.first_line, this._$.first_column ) }}
+    | 'for' '(' TIPOF identifier IN  EXP ')'  BLOQUE_INSTRUCCIONES { $$ = { C3D: new ForInOfNode ( $4, $5.C3D, $6.C3D,  this._$.first_line, this._$.first_column  )}}
     ;
+
+IN :  'in' {$$ ={ C3D: true  }}
+   |  'of' {$$ ={ C3D: false  }}
+   ;
 
 BLOQUE_INSTRUCCIONES : '{' INSTRUCCIONES '}' {$$ = { C3D: $2.C3D }}
                      | '{' '}'               {$$ = { C3D:[] }}
+                     ;
+
+BLOQUE_INSTRUCCIONES_W :  INSTRUCCIONES  {$$ = { C3D: $1.C3D }}
+                     //| '{' '}'               {$$ = { C3D:[] }}
                      ;
 
 CONDICION : '(' EXP ')' {$$ = { C3D: $2.C3D  }}
