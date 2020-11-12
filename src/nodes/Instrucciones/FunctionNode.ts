@@ -7,23 +7,32 @@ import { BreakNode } from '../Expresiones/BreakNode';
 import { types, Type } from 'src/st/Type';
 import { ExceptionST } from '../../st/ExceptionST';
 import { TypeError, typesError } from '../../st/TypeError';
+import { Intermedio } from '../../st/Intermedio';
+import { Result } from '../..//st/Result';
+
 
 export class FunctionNode extends Node {
   type: Type;
   id: String;
   instList: Array<Node>;
+  param: Array<Node>;
 
-  constructor(
-    type: Type,
-    id: String,
-    instList: Array<Node>,
-    line: Number,
-    column: Number
-  ) {
+  constructor( type: Type, id: String, instList: Array<Node>, line: Number,column: Number,  param: Array<Node>) {
     super(type, line, column);
     this.type = type;
     this.id = id;
     this.instList = instList;
+    this.param = param;
+  }
+
+  genCode(table: Table, tree: Tree, intermedio:Intermedio) {
+
+
+    for (let i = 0; i < this.param.length; i++) {
+      console.log (" gencode value  -> " + this.param[i].genCode(table, tree, intermedio).valor + " " + + this.param[i].genCode(table, tree, intermedio).type);
+    }
+
+    return "";
   }
 
   execute(table: Table, tree: Tree) {

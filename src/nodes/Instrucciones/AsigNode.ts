@@ -15,7 +15,14 @@ export class AsigNode extends Node {
     this.value = value;
   }
 
+
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
   execute(table: Table, tree: Tree) {
+    console.log("Asignode ->");
     const result = this.value.execute(table, tree);
     if (result instanceof ExceptionST) {
       return result;

@@ -17,6 +17,12 @@ export class WhileNode extends Node {
     this.list = list;
   }
 
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
+
   execute(table: Table, tree: Tree) {
     const newTable = new Table(table);
     let result: Node;

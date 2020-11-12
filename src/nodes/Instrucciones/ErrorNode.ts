@@ -12,6 +12,11 @@ export class ErrorNode extends Node {
     this.err = err;
   }
 
+  genCode(table: Table, tree: Tree) {
+    tree.excepciones.push(this.err);
+    return "";
+  }
+
   execute(table: Table, tree: Tree): any {
     tree.excepciones.push(this.err);
     return null;

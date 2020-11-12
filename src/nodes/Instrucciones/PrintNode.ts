@@ -11,6 +11,14 @@ export class PrintNode extends Node {
     this.arg1 = arg1;
   }
 
+
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
+
+
   execute(table: Table, tree: Tree): any {
         const value = this.arg1.execute(table, tree);
         tree.console.push(value);

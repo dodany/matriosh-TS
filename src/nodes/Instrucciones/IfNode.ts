@@ -7,6 +7,9 @@ import { types } from 'src/st/Type';
 import { ContinueNode } from '../Expresiones/ContinueNode';
 import { BreakNode } from '../Expresiones/BreakNode';
 import { TypeError, typesError } from '../../st/TypeError';
+import { Intermedio } from '../../st/Intermedio';
+import { Result } from '../..//st/Result';
+
 
 export class IfNode extends Node {
   condition: Node;
@@ -18,6 +21,14 @@ export class IfNode extends Node {
     this.condition = condition;
     this.ifList = ifList;
     this.elseList = elseList;
+  }
+
+
+  genCode(table: Table, tree: Tree, intermedio:Intermedio) {
+
+    console.log("logramos el if ");
+
+    return "";
   }
 
   execute(table: Table, tree: Tree) {

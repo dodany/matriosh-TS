@@ -7,6 +7,11 @@ export class ContinueNode extends Node {
     super(null, line, column);
   }
 
+  genCode(table: Table, tree: Tree) {
+
+    return "";
+  }
+
   execute(table: Table, tree: Tree) {
     return this;
   }
