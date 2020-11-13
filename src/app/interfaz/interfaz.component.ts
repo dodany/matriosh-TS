@@ -14,7 +14,7 @@ import { BreakNode } from '../../nodes/Expresiones/BreakNode';
 import CodeMirror from 'codemirror';
 import { Intermedio } from '../../st/Intermedio';
 import { DeclareNode } from '../../nodes/Instrucciones/DeclareNode';
-
+import { FunctionNode } from '../../nodes/Instrucciones/FunctionNode';
 
 declare const arith_arbol: any;
 declare const generateTree: any;
@@ -151,137 +151,64 @@ export class InterfazComponent implements OnInit {
     this.txtPila = '';
   }
 
-  ////
+
+  //CÓDIGO3D-
   OnEjecutar3D() {
 
-   // const tree_ant = grammar3D.parse(this.txtIn);
-    //const tree = tree_ant.C3D; //const tree = tree_ant.val;
-    const tabla = new Table(null);
+    const table = new Table(null);
+    const tree= grammar3D.parse( this.txtIn).C3D;
     const intermedio = new Intermedio();
 
+    // PRIMERA PASADA -> ID
+    tree.instructions.map ((m:any) =>{
+      if (m instanceof DeclareNode){
+        const res = m.genCode ( table, tree, intermedio);
+      }
+    });
 
-  const t1=  this.declare_(this.txtIn);
-  console.log(t1);
+    // SEGUNDA PASADA -> FUNCIONES
+    tree.instructions.map ((m:any) =>{
+      if (m instanceof FunctionNode){
+        const res = m.genCode ( table, tree, intermedio);
+      }
+    });
 
-  const tree = this.declare_tee( this.txtIn);
-console.log(tree);
-
+    //TERCERA EL RESTO
     tree.instructions.map((m: any) => {
-
-
-      if (!(m instanceof DeclareNode)){
-
-
-
-        console.log("********else");
+      if (!( (m instanceof DeclareNode)   || (m instanceof FunctionNode))) {
         console.log(m);
-
-         //console.log("yeseyes yes ");
-         const res = m.genCode(t1, tree, intermedio);
+        const res = m.genCode(table, tree, intermedio);
          if (res instanceof BreakNode) {
-           const error = new ExceptionST(
-             typesError.SEMANTICO,
-             `Sentencia break fuera de un ciclo` + ',',
-             '[' + res.line + ',' + res.column + ']'
-           );
+           const error = new ExceptionST(typesError.SEMANTICO,`Sentencia break fuera de un ciclo` + ',','[' + res.line + ',' + res.column + ']');
            tree.excepciones.push(error);
          } else if (res instanceof ContinueNode) {
-           const error = new ExceptionST(
-             typesError.SEMANTICO,
-             `Sentencia continue fuera de un ciclo` + ',',
-             '[' + res.line + ',' + res.column + ']'
-           );
+           const error = new ExceptionST(typesError.SEMANTICO,`Sentencia continue fuera de un ciclo` + ',', '[' + res.line + ',' + res.column + ']');
            tree.excepciones.push(error);
          }
-
       }
 
     });
 
 
     let contenido = tree.console.join('\n');
-    this.txtOut = this.encabezado(intermedio.newTemporal()) + contenido +  this.cierre();
+    this.txtOut = intermedio.encabezado( intermedio.newTemporal()) +'\n' + intermedio.main_() + contenido + intermedio.cierre_main();
 
     //ERRORES
     this.txtErrores = tree.excepciones.join('\n');
 
     //PILA
     let pila = tree.pila.join('\n');
-    this.txtPila = this.encabezado_pila() + pila ;
+    if (!(pila=='')){
+      this.txtPila = this.encabezado_pila() + pila ;
+    }
+
   }
 
   encabezado_pila(){
-    let ini= 'Type  -' +  ' id -'  + ' Val -' + ' Const -' +  ' Pos -' + ' size  '+ '\n';
+    let ini= 'Ambito -' + 'Type  -' +  '   id -'  + ' Val -' + ' Const -' +  ' Pos -' + ' size  '+ '\n';
     return ini;
   }
 
-  //Encabezado C
-  encabezado(last: String): String {
-    let ini =
-      '#include <stdio.h> //Importar para el uso de Printf' +
-      '\n' +
-      'double heap[132000]; //Estructura para heap ' +
-      '\n' +
-      'double stack[132000]; //Estructura para stack ' +
-      '\n' +
-      'double p; //Puntero P ' +
-      '\n' +
-      'double h; //Puntero H ' +
-      '\n' +
-      'double ';
 
-    // las t
-    let n = last.substring(1);
-    let t = '';
-    for (var i = 0; i < Number(n); i++) {
-      if (i == Number(n) - 1) {
-        t += 'T' + i + ';';
-      } else {
-        t += 'T' + i + ',';
-      }
-    }
-
-    let main = '\n\n' + 'int main() { ' + '\n';
-    return ini + t + main;
-  }
-
-  cierre(){
-    return '\n' + "return 0;"  +'\n' + '}'
-  }
-
-
-  //PRIMERA PASADA INSERTANDO tabla de simbolos
-  declare_( txtIn:String ):Table {
-    const tree= grammar3D.parse( txtIn).C3D;
-    const tabla = new Table(null);
-    const intermedio = new Intermedio();
-
-    tree.instructions.map ((m:any) =>{
-      if (m instanceof DeclareNode){
-        const res = m.genCode ( tabla, tree, intermedio);
-        // Devolver RES
-
-      }
-
-    });
-
-    return tabla;
-  }
-
-  //PRIMERA PASADA PARA CREAR tree
-  declare_tee ( txtIn:String):Tree {
-    const tree= grammar3D.parse( txtIn).C3D;
-    const tabla = new Table(null);
-    const intermedio = new Intermedio();
-
-    tree.instructions.map ((m:any) =>{
-      if (m instanceof DeclareNode){
-        const res = m.genCode ( tabla, tree, intermedio);
-        // Devolver RES
-      }
-    });
-
-    return tree;
-  }
 
 }

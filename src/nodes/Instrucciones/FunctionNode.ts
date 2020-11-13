@@ -8,7 +8,7 @@ import { types, Type } from 'src/st/Type';
 import { ExceptionST } from '../../st/ExceptionST';
 import { TypeError, typesError } from '../../st/TypeError';
 import { Intermedio } from '../../st/Intermedio';
-import { Result } from '../..//st/Result';
+import { Result } from '../../st/Result';
 
 
 export class FunctionNode extends Node {
@@ -27,6 +27,7 @@ export class FunctionNode extends Node {
 
   genCode(table: Table, tree: Tree, intermedio:Intermedio) {
 
+    let ambito="fun_" + this.id + '()';
 
     for (let i = 0; i < this.param.length; i++) {
       console.log (" gencode value  -> " + this.param[i].genCode(table, tree, intermedio).valor + " " + + this.param[i].genCode(table, tree, intermedio).type);
@@ -35,11 +36,13 @@ export class FunctionNode extends Node {
     return "";
   }
 
+
+
   execute(table: Table, tree: Tree) {
     let symbol: Symbol;
     const newTable = new Table(table);
 
-    symbol = new Symbol(this.type, this.id, null, true, this.instList);
+    //symbol = new Symbol(ambito,this.type, this.id, null, true, this.instList);
 
     const res = table.setVariable(symbol);
     if (res != null) {

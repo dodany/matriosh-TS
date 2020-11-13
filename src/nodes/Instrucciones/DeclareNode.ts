@@ -22,24 +22,14 @@ export class DeclareNode extends Node {
     this.const_ = const_;
   }
 
-
-  init(table: Table, tree:Tree, intermedio:Intermedio ) {
-
-  }
-
   genCode(table: Table, tree: Tree, intermedio: Intermedio) {
     const result = this.value.genCode(table, tree, intermedio);
 
-    /*
-    console.log('DeclareNode value ->' + this.value.type);
-    console.log('DeclareNode type ->' + this.type);
-    console.log('result.cadena  cadena ->' + result.cadena);
-    console.log('result.valor valor->' + result.valor);
-    console.log('result.types  types->' + result.types); */
-
-    //PRIMERO VERIFICAR LA VARIABLE
+    let cadena = result.cadena;
+    let ambito="main()";
     let var_: Symbol;
     var_ = table.getVariable(this.id);
+
     if (var_ == null) {
       //NO EXISTE
 
@@ -47,46 +37,36 @@ export class DeclareNode extends Node {
       let sp = intermedio.setSP();
       let symbol: Symbol;
       let temporal = intermedio.newTemporal();
-      let cadena = result.cadena;
 
       if (this.value.type == null) {
         //***************************** */ TEMPORAL de ArithNode
         if (this.type.type === types.NUMBER) {
-          symbol = new Symbol(result.type,this.id,result.valor,this.const_,[],sp,1);
-          cadena = this.StackpointerC3D(temporal, cadena, sp, result.valor);
+
+          symbol = new Symbol(ambito, this.type,this.id,result.valor,this.const_,[],sp,1);
+          cadena = intermedio.StackpointerC3D(temporal, cadena, sp, result.valor,this.id);
         } else {
         }
       } else {
         //*********** */ ASIGNACIÓN de ValueNode
         if (this.value.type.type === types.NUMBER) {
           //NÚMERO
-          symbol = new Symbol(this.type,this.id,result.valor,this.const_,[],sp, 1);
-          cadena = this.StackpointerC3D(temporal, cadena, sp, result.valor);
+            symbol = new Symbol(ambito,this.type,this.id,result.valor,this.const_,[],sp, 1);
+            cadena = intermedio.StackpointerC3D(temporal, cadena, sp, result.valor,this.id);
 
         } else if (this.value.type.type === types.STRING) {
           //CADENA
           let hp = intermedio.setHP();
-          symbol = new Symbol(this.type,this.id,result.valor,this.const_,[],hp, 1);
-
-          cadena = this.StackpointerC3D(temporal, cadena, sp, temporal);
-
-         // console.log ( "heap actual antes -> " + intermedio.getHP() );
-         // console.log (" valor.lenght cadena -> " + result.valor.length);
-
-          intermedio.setHp_memory ( result.valor.length);
-          // heap
-          cadena = this.HeapPointerC3D(  temporal, cadena, hp, result.valor);
-          // VERIFICAR SI ES NULL
-          //console.log ( "heap actual después -> " + intermedio.getHP() );
+          //VERIFICO SI NO INGRESAN VALOR
+            symbol = new Symbol(ambito,this.type,this.id,result.valor,this.const_,[],hp, 1);
+           cadena = intermedio.StackpointerC3D(temporal, cadena, sp, temporal,this.id);
+            intermedio.setHp_memory ( result.valor.length);
+            cadena = intermedio.HeapPointerC3D(  temporal, cadena, hp, result.valor);
 
         } else if ( this.type.type === types.BOOLEAN) {
-          //LOS OTROS VALORES
-          console.log("si andamos por acá");
-          let b= result.valor == 'true';
-
-          symbol= new Symbol ( result.type, this.id, Number(b), this.const_,[], sp,1);
-          cadena = this.StackpointerC3D(temporal, cadena, sp, Number(b).toString());
-
+          //BOOLEAN
+           let b= result.valor == 'true';
+          symbol= new Symbol ( ambito, result.type, this.id, Number(b), this.const_,[], sp,1);
+         cadena = intermedio.StackpointerC3D(temporal, cadena, sp, Number(b).toString(),this.id);
         }
       }
 
@@ -98,64 +78,28 @@ export class DeclareNode extends Node {
         const error = new ExceptionST(typesError.SEMANTICO, res + ',','[' + this.line + ',' + this.column + ']');
         tree.excepciones.push(error);
       } else {
-
         tree.console.push(cadena);
         return new Result(temporal, this.type, cadena);
       }
 
     } else {
       // YA EXISTE el id
-
-      const error = new ExceptionST(
-        typesError.SEMANTICO,
-        "Ya existe " + ',',
-        '[' + this.line + ',' + this.column + ']'
-      );
+      const error = new ExceptionST(typesError.SEMANTICO,"Ya existe "+ this.id+ + ',', '[' + this.line + ',' + this.column + ']');
       tree.excepciones.push(error);
       return "";
     }
   }
 
-  private StackpointerC3D(temporal: String, cadena: String, sp: Number, result: String ): String {
-    cadena += temporal + ' = ' + 'p' + ' + ' + sp;
-    cadena += ';\n';
-    cadena += '//' + 'Declare id ' + this.id + '\n';
-    cadena += 'stack[(int)' + temporal + '] = ' + result;
-    cadena += ';\n';
-    cadena += '//' + 'Stack value ' + result;
-    cadena += ';\n';
-    return cadena;
-  }
 
-  private HeapPointerC3D(temporal:String, cadena:String, hp: Number, result:String): String {
 
-    if ( result.length>0){
-
-      for ( let i=0; i<result.length ; i++){
-
-        cadena += 'heap[(int)h] = ' + result.charCodeAt(i);
-        cadena += ';\n';
-
-        cadena += 'h = h + 1';
-        cadena += ';\n';
-      }
-    }
-
-      cadena+= 'heap[(int)h] = -1';
-      cadena += ';\n';
-
-    return cadena;
-  }
-
+  //*************EXECUTE
   execute(table: Table, tree: Tree) {
     const result = this.value.execute(table, tree);
     if (result instanceof ExceptionST) {
       return result;
     }
-
     let symbol: Symbol;
-    symbol = new Symbol(this.type, this.id, result, this.const_);
-
+    //symbol = new Symbol(this.type, this.id, result, this.const_);
     const res = table.setVariable(symbol);
     if (res != null) {
       const error = new ExceptionST(

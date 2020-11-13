@@ -5,7 +5,7 @@ import { Table } from '../../st/Table';
 import { Tree } from '../../st/Tree';
 import { TypeError, typesError } from '../../st/TypeError';
 import { Intermedio } from '../../st/Intermedio';
-import { Result } from '../..//st/Result';
+import { Result } from '../../st/Result';
 
 export class ArithNode extends Node {
   arg1: Node;
@@ -28,9 +28,9 @@ export class ArithNode extends Node {
 
     switch (this.op) {
       case '+':
-        cadena += temporal + ' = ' + lResult.valor + ' + ' + rResult.valor;
-        cadena = intermedio.format(cadena);
-        cadena = intermedio.comment(cadena, 'Suma de ' + lResult.valor + '+' + rResult.valor);
+        cadena += temporal + ' = ' + lResult.valor + ' + ' + rResult.valor + intermedio.semicolonEnter_();
+        //cadena = intermedio.format(cadena);
+        cadena += intermedio.comment('Suma de ' + lResult.valor + '+' + rResult.valor);
         break;
       case '-':
         break;
@@ -41,6 +41,8 @@ export class ArithNode extends Node {
 
     return new Result(temporal, this.arg1.type ,cadena);
   }
+
+
 
   execute(table: Table, tree: Tree) {
     const lResult = this.arg1.execute(table, tree);

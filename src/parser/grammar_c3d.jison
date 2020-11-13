@@ -172,11 +172,11 @@ LP: LP ',' identifier ':' TIPO { $$={ C3D: $1.C3D} ; $$.C3D.push(new ParamNode( 
 CALLFUNCTION: identifier '(' ')' ';'  {  $$ ={ C3D: new CallNode($1, this._$.first_line, this._$.first_column)}}
             ;
 
-DECLARACION : 'TIPOF' identifier '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D.type, $2, $4.C3D,this._$.first_line, this._$.first_column,$1.C3D) }}
-            | 'TIPOF' identifier ':' TIPO '=' EXP ';' {$$ = { C3D: new DeclareNode($4.C3D, $2, $6.C3D, this._$.first_line, this._$.first_column, $1.C3D) }}
-            | 'TIPOF' identifier ':' TIPO '[' ']' '=' '[' LE ']' ';' {$$ ={ C3D: new DeclareArrayNode( $4.C3D.type, $2, $9.C3D, this._$.first_line, this._$.first_column, $1.C3D ) } }
+//'TIPOF' identifier ':' TIPO';'                                        {$$ = { C3D: new DeclareNode($4.C3D.type, $2, '',this._$.first_line, this._$.first_column,$1.C3D) }}
+DECLARACION : 'TIPOF' identifier ':' TIPO '=' EXP ';'                               {$$ = { C3D: new DeclareNode($4.C3D, $2, $6.C3D, this._$.first_line, this._$.first_column, $1.C3D) }}
+            | 'TIPOF' identifier ':' TIPO '[' ']' '=' '[' LE ']' ';'                {$$ = { C3D: new DeclareArrayNode( $4.C3D.type, $2, $9.C3D, this._$.first_line, this._$.first_column, $1.C3D ) } }
             | 'TIPOF' identifier ':' TIPO '[' ']' '=' 'new' 'array' '(' EXP ')' ';' {$$ = { C3D: new DeclareArrayNode( $4.C3D.type, $2,[$7.C3D] ,this._$.first_line, this._$.first_column, $1.C3D)  }}
-            | 'type' identifier '=' '{' LP '}' ';' { $$ = { C3D: new TypesNode( $2, $5.C3D,  this._$.first_line, this._$.first_column) }}
+            | 'type' identifier '=' '{' LP '}' ';'                                  {$$ = { C3D: new TypesNode( $2, $5.C3D,  this._$.first_line, this._$.first_column) }}
             ;
 
 LE : LE ',' EXP  { $$ = {C3D: $1.C3D } ; $$.C3D.push($3.C3D); }
