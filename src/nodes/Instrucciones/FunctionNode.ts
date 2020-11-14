@@ -8,7 +8,8 @@ import { types, Type } from 'src/st/Type';
 import { ExceptionST } from '../../st/ExceptionST';
 import { TypeError, typesError } from '../../st/TypeError';
 import { Intermedio } from '../../st/Intermedio';
-import { Result } from '../..//st/Result';
+import { Result } from '../../st/Result';
+import { DeclareNode } from './DeclareNode';
 
 
 export class FunctionNode extends Node {
@@ -27,20 +28,46 @@ export class FunctionNode extends Node {
 
   genCode(table: Table, tree: Tree, intermedio:Intermedio) {
 
+    //param: tengo los parametros
+    //instList tengo los declare
+
+    let ambito="fun_" + this.id + '()'; //Este es mi ambito
+
+
 
     for (let i = 0; i < this.param.length; i++) {
       console.log (" gencode value  -> " + this.param[i].genCode(table, tree, intermedio).valor + " " + + this.param[i].genCode(table, tree, intermedio).type);
     }
 
+/*
+    tree.instructions.map ((m:any) =>{
+      if (m instanceof DeclareNode){
+       // const res = m.genCode ( table, tree, intermedio);
+       console.log("declares dentro de las funciones ");
+      }
+    });
+*/
+
+    for( let i =0 ; i < this.instList.length; i++){
+
+      if (  this.instList[i]   instanceof DeclareNode){
+        console.log ( " declare dentro de la funcion -> " );
+        const res = this.instList[i].genCode(table, tree,intermedio);
+      }
+
+    }
+
+
     return "";
   }
 
+
+
+//EXECUTE
   execute(table: Table, tree: Tree) {
     let symbol: Symbol;
     const newTable = new Table(table);
-
-    symbol = new Symbol(this.type, this.id, null, true, this.instList);
-
+    //symbol = new Symbol(ambito,this.type, this.id, null, true, this.instList);
     const res = table.setVariable(symbol);
     if (res != null) {
       const error = new ExceptionST(
@@ -50,6 +77,7 @@ export class FunctionNode extends Node {
       );
       tree.excepciones.push(error);
     }
+
     for (let i = 0; i < this.instList.length; i++) {
       const res = this.instList[i].execute(newTable, tree);
 
@@ -60,4 +88,5 @@ export class FunctionNode extends Node {
 
     return null;
   }
+
 }
