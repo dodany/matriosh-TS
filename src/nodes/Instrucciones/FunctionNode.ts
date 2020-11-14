@@ -47,7 +47,6 @@ export class FunctionNode extends Node {
       }
     });
 */
-
     for( let i =0 ; i < this.instList.length; i++){
 
       if (  this.instList[i]   instanceof DeclareNode){
