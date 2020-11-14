@@ -5,14 +5,28 @@ export class Intermedio {
   private heap_pointer: number;
   private display_pointer: number;
 
+  /************* AMBITO DE LAS FUNCTIONS*/
+  private ambito:String;
+
   constructor() {
     this.temporal = -1;
     this.etiqueta = -1;
     this.stack_pointer = -1;
     this.heap_pointer = -1;
     this.display_pointer = -1;
+    this.ambito= "main()";
   }
 
+  /**AMBITO */
+  public setAmbito(new_ambito:String) {
+    this.ambito= new_ambito;
+  }
+
+  public getAmbito(){
+    return this.ambito;
+  }
+
+/********** STACK_POINTER  */
   public setSP(): number {
     this.stack_pointer++;
     return this.stack_pointer;
@@ -22,6 +36,7 @@ export class Intermedio {
     return this.stack_pointer;
   }
 
+  /**** HEAP POINTER  */
   public setHP(): number {
     this.heap_pointer++;
     return this.heap_pointer;
@@ -35,6 +50,7 @@ export class Intermedio {
     return this.heap_pointer;
   }
 
+  /***DISPLAY POINTER */
   public retDisplay(): number {
     return this.display_pointer;
   }

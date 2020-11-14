@@ -26,9 +26,8 @@ export class DeclareNode extends Node {
     const result = this.value.genCode(table, tree, intermedio);
 
     let cadena = result.cadena;
-    let ambito="main()";
     let var_: Symbol;
-    var_ = table.getVariable(this.id);
+    var_ = table.getVariable(intermedio.getAmbito(),this.id);
 
     if (var_ == null) {
       //NO EXISTE
@@ -42,7 +41,7 @@ export class DeclareNode extends Node {
         //***************************** */ TEMPORAL de ArithNode
         if (this.type.type === types.NUMBER) {
 
-          symbol = new Symbol(ambito, this.type,this.id,result.valor,this.const_,[],sp,1);
+          symbol = new Symbol(intermedio.getAmbito(), this.type,this.id,result.valor,this.const_,[],sp,1);
           cadena = intermedio.StackpointerC3D(temporal, cadena, sp, result.valor,this.id);
         } else {
         }
@@ -50,14 +49,14 @@ export class DeclareNode extends Node {
         //*********** */ ASIGNACIÓN de ValueNode
         if (this.value.type.type === types.NUMBER) {
           //NÚMERO
-            symbol = new Symbol(ambito,this.type,this.id,result.valor,this.const_,[],sp, 1);
+            symbol = new Symbol(intermedio.getAmbito(),this.type,this.id,result.valor,this.const_,[],sp, 1);
             cadena = intermedio.StackpointerC3D(temporal, cadena, sp, result.valor,this.id);
 
         } else if (this.value.type.type === types.STRING) {
           //CADENA
           let hp = intermedio.setHP();
           //VERIFICO SI NO INGRESAN VALOR
-            symbol = new Symbol(ambito,this.type,this.id,result.valor,this.const_,[],hp, 1);
+            symbol = new Symbol(intermedio.getAmbito(),this.type,this.id,result.valor,this.const_,[],hp, 1);
            cadena = intermedio.StackpointerC3D(temporal, cadena, sp, temporal,this.id);
             intermedio.setHp_memory ( result.valor.length);
             cadena = intermedio.HeapPointerC3D(  temporal, cadena, hp, result.valor);
@@ -65,7 +64,7 @@ export class DeclareNode extends Node {
         } else if ( this.type.type === types.BOOLEAN) {
           //BOOLEAN
            let b= result.valor == 'true';
-          symbol= new Symbol ( ambito, result.type, this.id, Number(b), this.const_,[], sp,1);
+          symbol= new Symbol (intermedio.getAmbito(), result.type, this.id, Number(b), this.const_,[], sp,1);
          cadena = intermedio.StackpointerC3D(temporal, cadena, sp, Number(b).toString(),this.id);
         }
       }

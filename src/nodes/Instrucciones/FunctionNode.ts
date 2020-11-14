@@ -28,12 +28,10 @@ export class FunctionNode extends Node {
 
   genCode(table: Table, tree: Tree, intermedio:Intermedio) {
 
+
     //param: tengo los parametros
     //instList tengo los declare
-
     let ambito="fun_" + this.id + '()'; //Este es mi ambito
-
-
 
     for (let i = 0; i < this.param.length; i++) {
       console.log (" gencode value  -> " + this.param[i].genCode(table, tree, intermedio).valor + " " + + this.param[i].genCode(table, tree, intermedio).type);
@@ -47,6 +45,7 @@ export class FunctionNode extends Node {
       }
     });
 */
+    intermedio.setAmbito(this.id);
     for( let i =0 ; i < this.instList.length; i++){
 
       if (  this.instList[i]   instanceof DeclareNode){
@@ -55,7 +54,7 @@ export class FunctionNode extends Node {
       }
 
     }
-
+    intermedio.setAmbito("main()");
 
     return "";
   }
