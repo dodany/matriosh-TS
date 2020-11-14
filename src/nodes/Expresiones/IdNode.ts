@@ -23,7 +23,7 @@ export class IdNode extends Node {
   execute(table: Table, tree: Tree) {
     let var_: Symbol;
 
-    var_ = table.getVariable(this.id);
+    //var_ = table.getVariable(this.id);
     if (var_ == null) {
 
       const error = new ExceptionST(  typesError.SEMANTICO,

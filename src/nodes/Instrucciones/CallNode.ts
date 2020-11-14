@@ -25,7 +25,7 @@ export class CallNode extends Node {
   execute(table: Table, tree: Tree) {
     let var_: Symbol;
     const newTable = new Table(table);
-    var_ = table.getVariable(this.id);
+    //var_ = table.getVariable(this.id);
 
     if (var_ == null) {
       const error = new ExceptionST(

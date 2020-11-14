@@ -28,7 +28,7 @@ export class AsigNode extends Node {
       return result;
     }
     let var_: Symbol;
-    var_ = table.getVariable(this.id);
+    //var_ = table.getVariable(this.id);
     if (var_ == null) {
       const error = new ExceptionST(
         typesError.SEMANTICO,
