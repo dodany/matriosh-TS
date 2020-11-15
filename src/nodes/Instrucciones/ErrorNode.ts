@@ -10,6 +10,7 @@ export class ErrorNode extends Node {
   constructor(err: ExceptionST, line: Number, column: Number) {
     super(new Type(types.VOID), line, column);
     this.err = err;
+
   }
 
   genCode(table: Table, tree: Tree) {

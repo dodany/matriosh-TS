@@ -28,6 +28,7 @@
     const {SwitchNode} = require('../nodes/Instrucciones/SwitchNode');
     const {ForInOfNode} = require('../nodes/Instrucciones/ForInOfNode');
     const {TypesNode} = require('../nodes/Instrucciones/TypesNode');
+    //const {Intefaz} = require( '../app/interfaz/interfaz.component.ts');
 %}
 
 %lex
@@ -114,6 +115,9 @@ number [0-9]+("."[0-9]+)?\b
                         new ErrorNode( new ExceptionST(  typesError.LEXICO,
                                           "Carácter no reconocido "+ yytext 	+ " - " ,
                                       "[" + yylloc.first_line +"," + yylloc.first_colum + "]"));
+
+
+
                           }
 
 /lex
@@ -123,7 +127,7 @@ number [0-9]+("."[0-9]+)?\b
 %left '==', '!='
 %left '>=', '<=', '<', '>'
 %left  '+', '-'
-%left '*', '/', '%', '**'
+%left '**','*', '/', '%'
 %left '++', '--'
 %right '!'
 %left UMENOS
@@ -165,8 +169,8 @@ FUNCTION :   'function' identifier '(' ')' '{'  INSTRUCCIONES '}' {$$ = { C3D: n
            | 'function' identifier '(' LP ')' ':' TIPO '{' INSTRUCCIONES '}' { $$ = { C3D: new FunctionNode( $7.C3D, $2, $9.C3D, this._$.first_line, this._$.first_column,$4.C3D) }}
          ;
 
-LP: LP ',' identifier ':' TIPO { $$={ C3D: $1.C3D} ; $$.C3D.push(new ParamNode( $5.C3D.type,  $3, this._$.first_line, this._$.first_column));  }
-        |  identifier ':' TIPO { $$ ={ C3D: [new ParamNode( $3.C3D.type,  $1, this._$.first_line, this._$.first_column)] } }
+LP: LP ',' identifier ':' TIPO { $$={ C3D: $1.C3D} ; $$.C3D.push(new ParamNode( $5.C3D,  $3, this._$.first_line, this._$.first_column));  }
+        |  identifier ':' TIPO { $$ ={ C3D: [new ParamNode( $3.C3D,  $1, this._$.first_line, this._$.first_column)] } }
     ;
 
 CALLFUNCTION: identifier '(' ')' ';'  {  $$ ={ C3D: new CallNode($1, this._$.first_line, this._$.first_column)}}
@@ -196,8 +200,9 @@ TIPO : 'number'  {$$ = { C3D: new Type(types.NUMBER)  }}
      | 'types'   {$$ = { C3D: new TYPE(types.TYPE)    }}
      ;
 
-PRINT : 'console.log' '(' EXP ')' ';' { $$ = { C3D: new PrintNode($3.C3D, this._$.first_line, this._$.first_column) }}
+PRINT : 'console.log' '(' LE ')' ';' { $$ = { C3D: new PrintNode($3.C3D, this._$.first_line, this._$.first_column) }}
       ;
+
 
 GRAPH : 'graficar_ts' '('  ')' ';' { $$ = { C3D: new GraphNode(this._$.first_line, this._$.first_column)  }}
       ;

@@ -26,7 +26,7 @@ export class IfNode extends Node {
 
   genCode(table: Table, tree: Tree, intermedio:Intermedio) {
 
-    console.log("logramos el if ");
+   // console.log("logramos el if ");
 
     return "";
   }

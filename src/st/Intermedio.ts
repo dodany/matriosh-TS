@@ -1,3 +1,5 @@
+import { cachedDataVersionTag } from 'v8';
+
 export class Intermedio {
   private temporal: number;
   private etiqueta: number;
@@ -14,7 +16,7 @@ export class Intermedio {
     this.stack_pointer = -1;
     this.heap_pointer = -1;
     this.display_pointer = -1;
-    this.ambito= "main()";
+    this.ambito= "main";
   }
 
   /**AMBITO */
@@ -129,11 +131,22 @@ export class Intermedio {
   //************************
 
   //******STACK*************
-  public StackpointerC3D( temporal: String, cadena: String, sp: Number, result: String, id:String ): String {
-    cadena += this.enter_()+ this.comment(  '*Declare id ' + id );
+  public StackpointerC3D( temporal: String, cadena: String, sp: Number, result: String, id:String , comment:String ): String {
+    cadena += this.enter_()+ this.comment(  comment  + id.toString() );
     cadena += temporal + ' = ' + 'p' + ' + ' + sp + this.semicolonEnter_();
     cadena += 'stack[(int)' + temporal + '] = ' + result + this.semicolonEnter_();
     cadena +=this.comment(  '*Stack value ' + result);
+    return cadena;
+  }
+
+  public getStackPointerC3D(temporal:String, cadena:String, sp:Number, result:String, id:String, comment:String):String{
+    cadena += this.enter_()+ this.comment(  comment  + id.toString() );
+    cadena += temporal + ' = ' + 'p' + ' + ' + sp + this.semicolonEnter_();
+    //Nuevo terminal
+    let n1_temportal= this.newTemporal();
+    cadena += n1_temportal + ' = ' + 'stack[(int)' + temporal + ']' + this.semicolonEnter_();
+    //cadena +=  'stack[(int)' + temporal + '] = ' + result + this.semicolonEnter_();
+    cadena +=this.comment( n1_temportal + '=' + '*Stack value ' + result);
     return cadena;
   }
 
@@ -142,8 +155,9 @@ export class Intermedio {
 
     if (result.length > 0) {
       for (let i = 0; i < result.length; i++) {
-        cadena += 'heap[(int)h] = ' + result.charCodeAt(i); +this.semicolonEnter_();
-        cadena += 'h = h + 1'; +this.semicolonEnter_();
+        cadena += '\n';
+        cadena += 'heap[(int)h] = ' + result.charCodeAt(i)  +this.semicolonEnter_();
+        cadena += 'h = h + 1' + this.semicolonEnter_();
       }
     }
      cadena += 'heap[(int)h] = -1'; +this.semicolonEnter_();

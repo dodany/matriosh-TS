@@ -45,7 +45,7 @@ export class InterfazComponent implements OnInit {
   editorNativeElement: any;
   height: number;
 
-  constructor(elRef: ElementRef) {
+  constructor() {
     //private _dataSvc:DataService
     this.chkTree = true;
     this.chkConsola = true;
@@ -152,6 +152,10 @@ export class InterfazComponent implements OnInit {
   }
 
 
+  //ERRORES LEXICOS
+  error_lex(){
+     this.txtErrores ="Hola";
+  }
   //CÓDIGO3D-
   OnEjecutar3D() {
 
@@ -159,10 +163,13 @@ export class InterfazComponent implements OnInit {
     const tree= grammar3D.parse( this.txtIn).C3D;
     const intermedio = new Intermedio();
 
+
     // PRIMERA PASADA -> ID
     tree.instructions.map ((m:any) =>{
+
       if (m instanceof DeclareNode){
         const res = m.genCode ( table, tree, intermedio);
+        console.log(m);
       }
     });
 
@@ -177,6 +184,7 @@ export class InterfazComponent implements OnInit {
     tree.instructions.map((m: any) => {
       if (!( (m instanceof DeclareNode)   || (m instanceof FunctionNode))) {
         console.log(m);
+        //para ver el Node
         const res = m.genCode(table, tree, intermedio);
          if (res instanceof BreakNode) {
            const error = new ExceptionST(typesError.SEMANTICO,`Sentencia break fuera de un ciclo` + ',','[' + res.line + ',' + res.column + ']');
@@ -194,7 +202,7 @@ export class InterfazComponent implements OnInit {
     this.txtOut = intermedio.encabezado( intermedio.newTemporal()) +'\n' + intermedio.main_() + contenido + intermedio.cierre_main();
 
     //ERRORES
-    this.txtErrores = tree.excepciones.join('\n');
+    this.txtErrores =  tree.excepciones.join('\n');
 
     //PILA
     let pila = tree.pila.join('\n');
@@ -205,7 +213,7 @@ export class InterfazComponent implements OnInit {
   }
 
   encabezado_pila(){
-    let ini= 'Ambito -' + 'Type  -' +  '   id -'  + ' Val -' + ' Const -' +  ' Pos -' + ' size  '+ '\n';
+    let ini= 'Ambito -' + 'Type  -' +  '     id -'  + ' Val -' + ' Const -' +  ' Pos -' + ' size  '+ '\n';
     return ini;
   }
 

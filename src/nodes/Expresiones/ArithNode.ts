@@ -13,7 +13,7 @@ export class ArithNode extends Node {
   op: String;
 
   constructor(arg1: Node,arg2: Node,op: String,line: Number,column: Number) {
-    super(null, line, column);
+    super(arg1.type, line, column);
     this.arg1 = arg1;
     this.arg2 = arg2;
     this.op = op;
@@ -29,12 +29,24 @@ export class ArithNode extends Node {
     switch (this.op) {
       case '+':
         cadena += temporal + ' = ' + lResult.valor + ' + ' + rResult.valor + intermedio.semicolonEnter_();
-        //cadena = intermedio.format(cadena);
         cadena += intermedio.comment('Suma de ' + lResult.valor + '+' + rResult.valor);
         break;
       case '-':
+        cadena += temporal + ' = ' + lResult.valor + ' - ' + rResult.valor + intermedio.semicolonEnter_();
+        cadena += intermedio.comment('Resta de ' + lResult.valor + '+' + rResult.valor);
         break;
-
+      case '*':
+        cadena += temporal + ' = ' + lResult.valor + ' * ' + rResult.valor + intermedio.semicolonEnter_();
+        cadena += intermedio.comment('Multiplicación de ' + lResult.valor + '+' + rResult.valor);
+        break;
+      case '/':
+        cadena += temporal + ' = ' + lResult.valor + ' / ' + rResult.valor + intermedio.semicolonEnter_();
+        cadena += intermedio.comment('División de ' + lResult.valor + '+' + rResult.valor);
+        break;
+      case '**':
+        cadena += temporal + ' = ' + 'pow('+ lResult.valor + ' , ' + rResult.valor  +')'+ intermedio.semicolonEnter_();
+        cadena += intermedio.comment('Potencia de ' + lResult.valor + '+' + rResult.valor);
+        break;
       //POTENCIA SOLO ENTEROS
       //STRINGS
     }
@@ -44,6 +56,7 @@ export class ArithNode extends Node {
 
 
 
+  //EXECUTE
   execute(table: Table, tree: Tree) {
     const lResult = this.arg1.execute(table, tree);
     if (lResult instanceof ExceptionST) {

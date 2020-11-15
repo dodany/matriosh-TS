@@ -3,7 +3,9 @@ import { Table } from 'src/st/Table';
 import { Tree } from 'src/st/Tree';
 import { Symbol } from '../../st/Symbol';
 import { ExceptionST } from '../../st/ExceptionST';
+import { Intermedio } from '../../st/Intermedio';
 import { TypeError,typesError } from '../../st/TypeError';
+import { Result } from '../../st/Result';
 
 export class IdNode extends Node {
   id: String;
@@ -14,12 +16,38 @@ export class IdNode extends Node {
     this.id = id;
   }
 
+  genCode(table: Table, tree: Tree, intermedio: Intermedio) {
+    // RETORNAR EL VALOR
 
-  genCode(table: Table, tree: Tree) {
+    let var_: Symbol;
+    var_ = table.getVariable(intermedio.getAmbito(),this.id);
+    if ( var_== null){
+      //NO EXISTE ESE ID
+      const error = new ExceptionST(  typesError.SEMANTICO,'No se ha encontrado la variable ' + this.id  +",", "[" + this.line +"," + this.column + "]");
+      tree.excepciones.push(error);
+      return error;
+    }else {
 
-    return "";
+      let cadena:String="";
+
+      let temporal= intermedio.newTemporal();
+      cadena = intermedio.getStackPointerC3D (temporal, cadena, var_.position, temporal, this.id, "IdNode- valor");
+
+      console.log("Idnode");
+      console.log(cadena);
+
+      return new Result(temporal, var_.type ,cadena);
+      //return cadena;
+
+    }
+
+    //return cadena;
   }
 
+
+
+
+  //***EXECUTE */
   execute(table: Table, tree: Tree) {
     let var_: Symbol;
 
